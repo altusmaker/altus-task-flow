@@ -36,11 +36,14 @@ window.saveTask=async function(){
   const reminderInput=document.getElementById('newTaskReminder');
   const button=document.querySelector('#addTaskModal [onclick="saveTask()"]');
   const title=titleInput.value.trim();
+  const reminder=reminderInput.value;
   if(!title){titleInput.classList.add('is-invalid');titleInput.focus();return;}
+  if(reminder&&!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?$/.test(reminder)){alert('The reminder date is invalid. Please select it again.');return;}
   titleInput.classList.remove('is-invalid');
   button.disabled=true;
   try{
-    const response=await fetch('/api/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,status:statusInput.value,reminderTime:reminderInput.value||null})});
+    const reminderTime=reminder?`${reminder.slice(0,16)}:00`:null;
+    const response=await fetch('/api/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,status:statusInput.value,reminderTime})});
     if(!response.ok)throw new Error(`Task request failed with ${response.status}`);
     location.reload();
   }catch(error){

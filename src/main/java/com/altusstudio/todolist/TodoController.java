@@ -1,6 +1,8 @@
 package com.altusstudio.todolist;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +40,28 @@ public class TodoController {
         LocalDate end = to == null ? today : to;
         if (end.isBefore(start)) throw new IllegalArgumentException("End date must not precede start date.");
 
-        List<WorklogReportEntry> entries = taskRepository.findAll().stream()
+        List<WorklogReportEntry> entries = findWorklogEntries(start, end);
+        model.addAttribute("entries", entries);
+        model.addAttribute("totalMinutes", entries.stream().mapToInt(WorklogReportEntry::durationMinutes).sum());
+        model.addAttribute("from", start);
+        model.addAttribute("to", end);
+        return "worklog-report";
+    }
+
+    @GetMapping("/worklog-report/export")
+    @ResponseBody
+    public ResponseEntity<byte[]> exportWorklogReport(@RequestParam LocalDate from, @RequestParam LocalDate to) {
+        if (to.isBefore(from)) throw new IllegalArgumentException("End date must not precede start date.");
+        List<WorklogReportEntry> entries = findWorklogEntries(from, to);
+        int totalMinutes = entries.stream().mapToInt(WorklogReportEntry::durationMinutes).sum();
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=worklog-report.xlsx")
+                .body(WorklogExcelExporter.export(entries, totalMinutes));
+    }
+
+    private List<WorklogReportEntry> findWorklogEntries(LocalDate start, LocalDate end) {
+        return taskRepository.findAll().stream()
                 .flatMap(task -> task.getWorkLogs().stream()
                         .filter(log -> !log.getLoggedAt().toLocalDate().isBefore(start)
                                 && !log.getLoggedAt().toLocalDate().isAfter(end))
@@ -46,11 +69,6 @@ public class TodoController {
                                 log.getDescription(), log.getLoggedAt())))
                 .sorted(Comparator.comparing(WorklogReportEntry::loggedAt).reversed())
                 .toList();
-        model.addAttribute("entries", entries);
-        model.addAttribute("totalMinutes", entries.stream().mapToInt(WorklogReportEntry::durationMinutes).sum());
-        model.addAttribute("from", start);
-        model.addAttribute("to", end);
-        return "worklog-report";
     }
 
     @PostMapping("/api/tasks")
