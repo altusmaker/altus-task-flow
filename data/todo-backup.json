@@ -8,7 +8,12 @@
     "durationMinutes" : 30,
     "description" : "تستتسستستستس",
     "loggedAt" : [ 2026, 10, 18, 0, 7, 33, 248060000 ]
+  }, {
+    "id" : 2,
+    "durationMinutes" : 150,
+    "description" : "کار زیاد",
+    "loggedAt" : [ 2026, 10, 18, 1, 26, 40, 995265000 ]
   } ],
-  "formattedTotalWork" : "30m",
-  "totalWorkMinutes" : 30
+  "totalWorkMinutes" : 180,
+  "formattedTotalWork" : "3h 0m"
 } ]
