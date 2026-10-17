@@ -1,4 +1,4 @@
-package com.amirdehi.simpletodo;
+package com.amirdehi.altustodolist;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,29 @@ public class TodoController {
         model.addAttribute("inProgress", tasks.stream().filter(task -> task.getStatus() == TaskStatus.IN_PROGRESS).collect(Collectors.toList()));
         model.addAttribute("dones", tasks.stream().filter(task -> task.getStatus() == TaskStatus.DONE).collect(Collectors.toList()));
         return "index";
+    }
+
+    @GetMapping("/worklog-report")
+    public String worklogReport(@RequestParam(required = false) LocalDate from,
+                                @RequestParam(required = false) LocalDate to, Model model) {
+        LocalDate today = LocalDate.now();
+        LocalDate start = from == null ? today.withDayOfMonth(1) : from;
+        LocalDate end = to == null ? today : to;
+        if (end.isBefore(start)) throw new IllegalArgumentException("End date must not precede start date.");
+
+        List<WorklogReportEntry> entries = taskRepository.findAll().stream()
+                .flatMap(task -> task.getWorkLogs().stream()
+                        .filter(log -> !log.getLoggedAt().toLocalDate().isBefore(start)
+                                && !log.getLoggedAt().toLocalDate().isAfter(end))
+                        .map(log -> new WorklogReportEntry(task.getTitle(), log.getDurationMinutes(),
+                                log.getDescription(), log.getLoggedAt())))
+                .sorted(Comparator.comparing(WorklogReportEntry::loggedAt).reversed())
+                .toList();
+        model.addAttribute("entries", entries);
+        model.addAttribute("totalMinutes", entries.stream().mapToInt(WorklogReportEntry::durationMinutes).sum());
+        model.addAttribute("from", start);
+        model.addAttribute("to", end);
+        return "worklog-report";
     }
 
     @PostMapping("/api/tasks")
