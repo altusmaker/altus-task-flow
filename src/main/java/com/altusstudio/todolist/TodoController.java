@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,9 +77,18 @@ public class TodoController {
     public ResponseEntity<Task> addTask(@RequestBody TaskRequest request) {
         Task task = new Task();
         task.setTitle(request.getTitle());
+        task.setLabel(request.getLabel());
         task.setStatus(request.getStatus());
-        task.setReminderTime(request.getReminderTime());
+        try {
+            task.setReminderTime(parseReminderTime(request.getReminderTime()));
+        } catch (DateTimeParseException exception) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(storageService.save(task));
+    }
+
+    private LocalDateTime parseReminderTime(String reminderTime) {
+        return reminderTime == null || reminderTime.isBlank() ? null : LocalDateTime.parse(reminderTime);
     }
 
     @PatchMapping("/api/tasks/{id}/status")

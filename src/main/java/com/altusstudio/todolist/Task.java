@@ -9,6 +9,7 @@ import java.util.List;
 public class Task {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
     private String title;
+    private String label;
     @Enumerated(EnumType.STRING) private TaskStatus status;
     private LocalDateTime reminderTime;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER) private List<WorkLog> workLogs = new ArrayList<>();
@@ -26,6 +27,8 @@ public class Task {
     public void setId(Long id) { this.id = id; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
+    public String getLabel() { return label; }
+    public void setLabel(String label) { this.label = label; }
     public TaskStatus getStatus() { return status; }
     public void setStatus(TaskStatus status) { this.status = status; }
     public LocalDateTime getReminderTime() { return reminderTime; }
