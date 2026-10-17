@@ -1,7 +1,6 @@
 package com.amirdehi.simpletodo;
 
 import jakarta.persistence.*;
-import lombok.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,9 +33,6 @@ enum TaskStatus {
 
 // --- ENTITIES ---
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,12 +50,24 @@ class Task {
     public long getTotalWorkMinutes() {
         return workLogs.stream().mapToLong(WorkLog::getDurationMinutes).sum();
     }
+
+    public Task() { }
+    public Task(Long id, String title, TaskStatus status, LocalDateTime reminderTime, List<WorkLog> workLogs) {
+        this.id = id; this.title = title; this.status = status; this.reminderTime = reminderTime; this.workLogs = workLogs;
+    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public TaskStatus getStatus() { return status; }
+    public void setStatus(TaskStatus status) { this.status = status; }
+    public LocalDateTime getReminderTime() { return reminderTime; }
+    public void setReminderTime(LocalDateTime reminderTime) { this.reminderTime = reminderTime; }
+    public List<WorkLog> getWorkLogs() { return workLogs; }
+    public void setWorkLogs(List<WorkLog> workLogs) { this.workLogs = workLogs; }
 }
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 class WorkLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,6 +75,19 @@ class WorkLog {
     private int durationMinutes;
     private String description;
     private LocalDateTime loggedAt;
+
+    public WorkLog() { }
+    public WorkLog(Long id, int durationMinutes, String description, LocalDateTime loggedAt) {
+        this.id = id; this.durationMinutes = durationMinutes; this.description = description; this.loggedAt = loggedAt;
+    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public int getDurationMinutes() { return durationMinutes; }
+    public void setDurationMinutes(int durationMinutes) { this.durationMinutes = durationMinutes; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public LocalDateTime getLoggedAt() { return loggedAt; }
+    public void setLoggedAt(LocalDateTime loggedAt) { this.loggedAt = loggedAt; }
 }
 
 // --- REPOSITORIES ---
@@ -75,25 +96,34 @@ interface TaskRepository extends JpaRepository<Task, Long> {
 }
 
 // --- DTOs ---
-@Data
 class TaskRequest {
     private String title;
     private TaskStatus status;
     private LocalDateTime reminderTime;
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public TaskStatus getStatus() { return status; }
+    public void setStatus(TaskStatus status) { this.status = status; }
+    public LocalDateTime getReminderTime() { return reminderTime; }
+    public void setReminderTime(LocalDateTime reminderTime) { this.reminderTime = reminderTime; }
 }
 
-@Data
 class WorkLogRequest {
     private int minutes;
     private String description;
+    public int getMinutes() { return minutes; }
+    public void setMinutes(int minutes) { this.minutes = minutes; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 }
 
 // --- CONTROLLER ---
 @Controller
-@RequiredArgsConstructor
 class TodoController {
 
     private final TaskRepository taskRepository;
+
+    TodoController(TaskRepository taskRepository) { this.taskRepository = taskRepository; }
 
     // صفحه اصلی
     @GetMapping("/")
