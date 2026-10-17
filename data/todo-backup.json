@@ -15,8 +15,8 @@
     "description" : "کار زیاد",
     "loggedAt" : [ 2026, 10, 18, 1, 26, 40, 995265000 ]
   } ],
-  "formattedTotalWork" : "3h 0m",
-  "totalWorkMinutes" : 180
+  "totalWorkMinutes" : 180,
+  "formattedTotalWork" : "3h 0m"
 }, {
   "id" : 3,
   "title" : "تست جدید",
@@ -29,6 +29,6 @@
     "description" : "کارهای عجیب غریب",
     "loggedAt" : [ 2026, 10, 18, 1, 32, 42, 547460000 ]
   } ],
-  "formattedTotalWork" : "8h 0m",
-  "totalWorkMinutes" : 480
+  "totalWorkMinutes" : 480,
+  "formattedTotalWork" : "8h 0m"
 } ]
