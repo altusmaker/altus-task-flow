@@ -16,6 +16,12 @@ public class Task {
     public Task() { }
     public Task(Long id, String title, TaskStatus status, LocalDateTime reminderTime, List<WorkLog> workLogs) { this.id = id; this.title = title; this.status = status; this.reminderTime = reminderTime; this.workLogs = workLogs; }
     public long getTotalWorkMinutes() { return workLogs.stream().mapToLong(WorkLog::getDurationMinutes).sum(); }
+    public String getFormattedTotalWork() {
+        long totalMinutes = getTotalWorkMinutes();
+        long hours = totalMinutes / 60;
+        long minutes = totalMinutes % 60;
+        return hours > 0 ? hours + "h " + minutes + "m" : minutes + "m";
+    }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getTitle() { return title; }
