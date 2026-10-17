@@ -1,191 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدیریت تسک‌ها</title>
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <style>
-        body { background-color: #f4f5f7; font-family: Tahoma, sans-serif; }
-        .column { background: #ebecf0; border-radius: 8px; padding: 10px; min-height: 80vh; }
-        .task-card { background: white; border-radius: 4px; padding: 10px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); cursor: grab; position: relative; }
-        .task-meta { font-size: 0.8rem; color: #666; margin-top: 5px; }
-        .worklog-badge { background-color: #deebff; color: #0747a6; padding: 2px 5px; border-radius: 3px; font-size: 0.75rem; }
-        .reminder-badge { background-color: #ffebd6; color: #bf2600; padding: 2px 5px; border-radius: 3px; font-size: 0.75rem; }
-        .btn-xs { padding: 0.1rem 0.3rem; font-size: 0.7rem; }
-    </style>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مدیریت تسک‌ها</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.003/Vazirmatn-font-face.css">
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <style>
+    :root{--ink:#1f2a44;--muted:#6c7891;--canvas:#f5f7fb;--surface:#fff;--primary:#4f46e5;--primary-dark:#3730a3;--teal:#0f9d8a;--amber:#d89520;--border:#e4e8f1;--shadow:0 10px 28px rgba(35,48,82,.08)}
+    *{box-sizing:border-box} body{min-height:100vh;background:radial-gradient(circle at 90% 0,#e5edff 0,transparent 30%),var(--canvas);color:var(--ink);font-family:Vazirmatn,Vazir,Tahoma,sans-serif;line-height:1.7}.board-shell{max-width:1440px;margin:auto}.board-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.25rem 0 2rem}.eyebrow{color:var(--primary);font-size:.78rem;font-weight:700;letter-spacing:.04em}.board-title{font-size:clamp(1.55rem,3vw,2.2rem);font-weight:800;margin:.15rem 0 0}.board-subtitle{color:var(--muted);font-size:.9rem;margin:.2rem 0 0}.notify-button{border-color:#cdd4ea;color:#475569;border-radius:.7rem;font-size:.8rem;padding:.48rem .8rem}.notify-button:hover{background:#eef1ff;border-color:#aab7ed;color:var(--primary-dark)}
+    .column{--accent:var(--primary);background:rgba(255,255,255,.72);border:1px solid var(--border);border-radius:1rem;padding:.85rem;min-height:68vh;box-shadow:0 4px 12px rgba(35,48,82,.025);transition:.2s}.column:has(.column-title[data-status="IN_PROGRESS"]){--accent:var(--amber)}.column:has(.column-title[data-status="DONE"]){--accent:var(--teal)}.column.drag-over{background:#f0f3ff;box-shadow:inset 0 0 0 2px rgba(79,70,229,.25)}.column-head{display:flex;align-items:center;gap:.6rem;padding:.25rem .3rem .8rem}.status-dot{width:.65rem;height:.65rem;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(79,70,229,.12)}.column-title{color:var(--ink);font-size:1rem;margin:0}
+    .task-card{background:var(--surface);border:1px solid #e8ebf2;border-radius:.8rem;padding:.9rem;margin-bottom:.7rem;box-shadow:0 3px 10px rgba(31,42,68,.045);cursor:grab;transition:.18s}.task-card:hover{transform:translateY(-2px);border-color:#cbd3ef;box-shadow:var(--shadow)}.task-card:active{cursor:grabbing}.task-title{color:var(--ink);font-size:.94rem;font-weight:700;padding-left:.55rem}.task-meta{font-size:.78rem;color:var(--muted);margin-top:.8rem}.worklog-badge,.reminder-badge{display:inline-flex;align-items:center;gap:.2rem;padding:.2rem .48rem;border-radius:.45rem;font-weight:600}.worklog-badge{background:#e9f8f5;color:#087d6c}.reminder-badge{background:#fff2e8;color:#b85a22}.btn-xs{padding:.22rem .48rem;font-size:.73rem;border-radius:.45rem}.btn-outline-primary{color:var(--primary);border-color:#c8cdf5}.btn-outline-primary:hover,.btn-primary{background:var(--primary);border-color:var(--primary)}.btn-primary:hover{background:var(--primary-dark);border-color:var(--primary-dark)}.add-task{border:1px dashed #c7cde2;color:#53617b;background:transparent;border-radius:.65rem;font-weight:600}.add-task:hover{background:#f0f2ff;border-color:var(--primary);color:var(--primary)}.modal-content{border:0;border-radius:1rem;box-shadow:0 18px 55px rgba(31,42,68,.18)}.modal-header,.modal-footer{border-color:var(--border)}.form-control{border-color:#dce1eb;border-radius:.6rem;font-family:inherit}.form-control:focus{border-color:#9da6ed;box-shadow:0 0 0 .2rem rgba(79,70,229,.12)}@media(max-width:575px){.board-header{align-items:flex-start;flex-direction:column;padding-bottom:1.25rem}.column{min-height:auto}}
+  </style>
 </head>
-<body>
-
-<div class="container-fluid py-4">
-    <h3 class="text-center mb-4">برد تسک‌ها</h3>
-
-    <div class="text-center mb-3">
-        <button onclick="requestNotificationPermission()" class="btn btn-outline-secondary btn-sm">فعال‌سازی نوتیفیکیشن مرورگر</button>
-    </div>
-
-    <div class="row g-3">
-        <!-- ستون‌ها -->
-        <div class="col-md-4" th:each="colStatus : ${T(com.amirdehi.simpletodo.TaskStatus).values()}">
-            <div class="column" ondrop="drop(event)" ondragover="allowDrop(event)" th:data-status="${colStatus.name()}">
-                <h5 class="fw-bold text-secondary mb-3" th:text="${colStatus.label}"></h5>
-
-                <!-- لیست تسک‌ها -->
-                <div th:each="task : ${colStatus == T(com.amirdehi.simpletodo.TaskStatus).TODO ? todos : (colStatus == T(com.amirdehi.simpletodo.TaskStatus).IN_PROGRESS ? inProgress : dones)}"
-                     class="task-card" draggable="true" ondragstart="drag(event)" th:id="'task-' + ${task.id}" th:data-reminder="${task.reminderTime}">
-
-                    <div class="d-flex justify-content-between">
-                        <strong th:text="${task.title}"></strong>
-                        <!-- FIX 1: استفاده از dataset برای حذف -->
-                        <button class="btn btn-close btn-xs"
-                                th:data-id="${task.id}"
-                                onclick="deleteTask(this.dataset.id)"></button>
-                    </div>
-
-                    <div class="task-meta mt-2">
-                        <span th:if="${task.reminderTime}" class="reminder-badge">
-                            ⏰ <span th:text="${#temporals.format(task.reminderTime, 'HH:mm - yyyy/MM/dd')}"></span>
-                        </span>
-                        <div class="mt-1 d-flex justify-content-between align-items-center">
-                            <span class="worklog-badge" th:id="'work-total-'+${task.id}">
-                                ⏱ <span th:text="${task.totalWorkMinutes}"></span> دقیقه
-                            </span>
-                            <!-- FIX 2: استفاده از dataset برای ثبت کارکرد -->
-                            <button class="btn btn-outline-primary btn-xs"
-                                    th:data-id="${task.id}"
-                                    onclick="openWorklogModal(this.dataset.id)">+ کارکرد</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- دکمه افزودن -->
-                <div class="mt-2 text-center">
-                    <!-- FIX 3: استفاده از dataset برای افزودن -->
-                    <button class="btn btn-secondary w-100 btn-sm"
-                            th:data-status="${colStatus.name()}"
-                            onclick="openAddModal(this.dataset.status)">+ افزودن تسک</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal افزودن تسک -->
-<div class="modal fade" id="addTaskModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header"><h5 class="modal-title">تسک جدید</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body">
-                <input type="hidden" id="newTaskStatus">
-                <div class="mb-3"><label>عنوان:</label><input type="text" id="newTaskTitle" class="form-control"></div>
-                <div class="mb-3"><label>یادآور (اختیاری):</label><input type="datetime-local" id="newTaskReminder" class="form-control"></div>
-            </div>
-            <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="saveTask()">ذخیره</button></div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal ثبت کارکرد -->
-<div class="modal fade" id="worklogModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header"><h5 class="modal-title">ثبت کارکرد (Jira Style)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body">
-                <input type="hidden" id="worklogTaskId">
-                <div class="mb-3"><label>مدت زمان (دقیقه):</label><input type="number" id="worklogMinutes" class="form-control"></div>
-                <div class="mb-3"><label>توضیحات:</label><textarea id="worklogDesc" class="form-control"></textarea></div>
-            </div>
-            <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="saveWorklog()">ثبت</button></div>
-        </div>
-    </div>
-</div>
-
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-
-<script>
-    const addModal = new bootstrap.Modal(document.getElementById('addTaskModal'));
-    const worklogModal = new bootstrap.Modal(document.getElementById('worklogModal'));
-
-    function openAddModal(status) {
-        document.getElementById('newTaskStatus').value = status;
-        document.getElementById('newTaskTitle').value = '';
-        document.getElementById('newTaskReminder').value = '';
-        addModal.show();
-    }
-
-    function saveTask() {
-        const data = {
-            title: document.getElementById('newTaskTitle').value,
-            status: document.getElementById('newTaskStatus').value,
-            reminderTime: document.getElementById('newTaskReminder').value || null
-        };
-        fetch('/api/tasks', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) }).then(() => location.reload());
-    }
-
-    function deleteTask(id) {
-        if(confirm('آیا مطمئن هستید؟')) {
-            fetch('/api/tasks/' + id, { method: 'DELETE' }).then(() => location.reload());
-        }
-    }
-
-    function openWorklogModal(id) {
-        document.getElementById('worklogTaskId').value = id;
-        document.getElementById('worklogMinutes').value = '';
-        document.getElementById('worklogDesc').value = '';
-        worklogModal.show();
-    }
-
-    function saveWorklog() {
-        const id = document.getElementById('worklogTaskId').value;
-        const data = { minutes: document.getElementById('worklogMinutes').value, description: document.getElementById('worklogDesc').value };
-        fetch(`/api/tasks/${id}/worklog`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) }).then(() => location.reload());
-    }
-
-    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
-    function allowDrop(ev) { ev.preventDefault(); }
-    function drop(ev) {
-        ev.preventDefault();
-        const data = ev.dataTransfer.getData("text");
-        const column = ev.target.closest('.column');
-        if (column) {
-            column.appendChild(document.getElementById(data));
-            const taskId = data.replace('task-', '');
-            const newStatus = column.getAttribute('data-status');
-            fetch(`/api/tasks/${taskId}/status?status=${newStatus}`, { method: 'PATCH' });
-        }
-    }
-
-    function requestNotificationPermission() {
-        if (Notification.permission !== "granted") {
-            Notification.requestPermission();
-        }
-    }
-
-    // تغییر ۳: استفاده از آیکون Base64 برای نوتیفیکیشن جهت حذف وابستگی به اینترنت
-    const offlineIconBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmYyNjAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTE4IDhhNiA2IDAgMCAwLTEyIDBjMCA3LTMgOS0zIDloMThzLTMtMi0zLTlNMTMuNzMgMjFhMiAyIDAgMCAxLTMuNDYgMHoiLz48L3N2Zz4=";
-
-    function checkReminders() {
-        if (Notification.permission !== "granted") return;
-        const tasks = document.querySelectorAll('.task-card');
-        const now = new Date();
-
-        tasks.forEach(task => {
-            const reminderStr = task.getAttribute('data-reminder');
-            if (reminderStr) {
-                const reminderTime = new Date(reminderStr);
-                const diff = reminderTime - now;
-                if (diff <= 0 && diff > -60000 && !task.dataset.notified) {
-                    new Notification("یادآوری تسک", {
-                        body: task.querySelector('strong').innerText,
-                        icon: offlineIconBase64
-                    });
-                    task.dataset.notified = "true";
-                }
-            }
-        });
-    }
-
-    setInterval(checkReminders, 30000);
-</script>
-</body>
-</html>
+<body><main class="container-fluid py-4 px-lg-4 board-shell"><header class="board-header"><div><div class="eyebrow">فضای کار شما</div><h1 class="board-title">برد تسک‌ها</h1><p class="board-subtitle">کارها را با کشیدن و رها کردن بین ستون‌ها جابه‌جا کنید.</p></div><button onclick="requestNotificationPermission()" class="btn btn-outline-secondary notify-button">فعال‌سازی یادآوری مرورگر</button></header>
+  <div class="row g-3"><div class="col-md-4" th:each="colStatus : ${T(com.amirdehi.simpletodo.TaskStatus).values()}"><section class="column" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" th:data-status="${colStatus.name()}"><div class="column-head"><span class="status-dot"></span><h2 class="column-title fw-bold" th:data-status="${colStatus.name()}" th:text="${colStatus.label}"></h2></div>
+    <div th:each="task : ${colStatus == T(com.amirdehi.simpletodo.TaskStatus).TODO ? todos : (colStatus == T(com.amirdehi.simpletodo.TaskStatus).IN_PROGRESS ? inProgress : dones)}" class="task-card" draggable="true" ondragstart="drag(event)" ondragend="dragEnd(event)" th:id="'task-' + ${task.id}" th:data-reminder="${task.reminderTime}"><div class="d-flex justify-content-between align-items-start gap-2"><strong class="task-title" th:text="${task.title}"></strong><button class="btn btn-close btn-xs flex-shrink-0" aria-label="حذف تسک" th:data-id="${task.id}" onclick="deleteTask(this.dataset.id)"></button></div><div class="task-meta mt-2"><span th:if="${task.reminderTime}" class="reminder-badge">⏰ <span th:text="${#temporals.format(task.reminderTime, 'HH:mm - yyyy/MM/dd')}"></span></span><div class="mt-2 d-flex justify-content-between align-items-center"><span class="worklog-badge" th:id="'work-total-'+${task.id}">⏱ <span th:text="${task.totalWorkMinutes}"></span> دقیقه</span><button class="btn btn-outline-primary btn-xs" th:data-id="${task.id}" onclick="openWorklogModal(this.dataset.id)">+ کارکرد</button></div></div></div>
+    <div class="mt-2 text-center"><button class="btn add-task w-100 btn-sm" th:data-status="${colStatus.name()}" onclick="openAddModal(this.dataset.status)">+ افزودن تسک</button></div></section></div></div></main>
+<div class="modal fade" id="addTaskModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title fw-bold">تسک جدید</h5><button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" id="newTaskStatus"><div class="mb-3"><label class="form-label" for="newTaskTitle">عنوان</label><input type="text" id="newTaskTitle" class="form-control" placeholder="مثلاً آماده‌سازی گزارش"></div><div><label class="form-label" for="newTaskReminder">یادآور <span class="text-muted">(اختیاری)</span></label><input type="datetime-local" id="newTaskReminder" class="form-control"></div></div><div class="modal-footer"><button type="button" class="btn btn-primary px-4" onclick="saveTask()">ذخیره تسک</button></div></div></div></div>
+<div class="modal fade" id="worklogModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title fw-bold">ثبت کارکرد</h5><button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" id="worklogTaskId"><div class="mb-3"><label class="form-label" for="worklogMinutes">مدت زمان (دقیقه)</label><input type="number" min="1" id="worklogMinutes" class="form-control" placeholder="۳۰"></div><div><label class="form-label" for="worklogDesc">توضیحات</label><textarea id="worklogDesc" class="form-control" rows="3" placeholder="چه کاری انجام شد؟"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-primary px-4" onclick="saveWorklog()">ثبت کارکرد</button></div></div></div></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script><script>
+const addModal=new bootstrap.Modal(document.getElementById('addTaskModal')),worklogModal=new bootstrap.Modal(document.getElementById('worklogModal'));
+function openAddModal(s){newTaskStatus.value=s;newTaskTitle.value='';newTaskReminder.value='';addModal.show()}function saveTask(){const d={title:newTaskTitle.value,status:newTaskStatus.value,reminderTime:newTaskReminder.value||null};fetch('/api/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(()=>location.reload())}function deleteTask(id){if(confirm('آیا مطمئن هستید؟'))fetch('/api/tasks/'+id,{method:'DELETE'}).then(()=>location.reload())}function openWorklogModal(id){worklogTaskId.value=id;worklogMinutes.value='';worklogDesc.value='';worklogModal.show()}function saveWorklog(){const d={minutes:worklogMinutes.value,description:worklogDesc.value};fetch(`/api/tasks/${worklogTaskId.value}/worklog`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(()=>location.reload())}
+function drag(e){e.dataTransfer.setData('text',e.target.id)}function dragEnd(){document.querySelectorAll('.column').forEach(c=>c.classList.remove('drag-over'))}function allowDrop(e){e.preventDefault();e.currentTarget.classList.add('drag-over')}function dragLeave(e){if(!e.currentTarget.contains(e.relatedTarget))e.currentTarget.classList.remove('drag-over')}function drop(e){e.preventDefault();const c=e.currentTarget,id=e.dataTransfer.getData('text');c.classList.remove('drag-over');c.appendChild(document.getElementById(id));fetch(`/api/tasks/${id.replace('task-','')}/status?status=${c.getAttribute('data-status')}`,{method:'PATCH'})}
+function requestNotificationPermission(){if(Notification.permission!=='granted')Notification.requestPermission()}const offlineIconBase64='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmYyNjAwIiBzdHJva2U9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTE4IDZhNiA2IDAgMCAwLTEyIDBjMCA3LTMgOS0zIDloMThzLTMtMi0zLTlNMTMuNzMgMjFhMiAyIDAgMCAxLTMuNDYgMHoiLz48L3N2Zz4=';function checkReminders(){if(Notification.permission!=='granted')return;const n=new Date();document.querySelectorAll('.task-card').forEach(t=>{const r=t.getAttribute('data-reminder');if(r){const d=new Date(r)-n;if(d<=0&&d>-60000&&!t.dataset.notified){new Notification('یادآوری تسک',{body:t.querySelector('strong').innerText,icon:offlineIconBase64});t.dataset.notified='true'}}})}setInterval(checkReminders,30000);
+</script></body></html>
