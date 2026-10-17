@@ -2,7 +2,7 @@
   "id" : 1,
   "title" : "تست اول",
   "label" : null,
-  "status" : "DONE",
+  "status" : "IN_PROGRESS",
   "reminderTime" : [ 2026, 10, 18, 0, 8 ],
   "workLogs" : [ {
     "id" : 1,
@@ -15,12 +15,12 @@
     "description" : "کار زیاد",
     "loggedAt" : [ 2026, 10, 18, 1, 26, 40, 995265000 ]
   } ],
-  "formattedTotalWork" : "3h 0m",
-  "totalWorkMinutes" : 180
+  "totalWorkMinutes" : 180,
+  "formattedTotalWork" : "3h 0m"
 }, {
   "id" : 3,
   "title" : "تست جدید",
-  "label" : null,
+  "label" : "پیاده سازی",
   "status" : "IN_PROGRESS",
   "reminderTime" : null,
   "workLogs" : [ {
@@ -34,15 +34,24 @@
     "description" : "تست زیاد",
     "loggedAt" : [ 2026, 10, 18, 1, 59, 46, 74191000 ]
   } ],
-  "formattedTotalWork" : "8h 30m",
-  "totalWorkMinutes" : 510
+  "totalWorkMinutes" : 510,
+  "formattedTotalWork" : "8h 30m"
 }, {
   "id" : 7,
   "title" : "نسخه امنیت",
   "label" : "نسخه گذاری",
-  "status" : "TODO",
+  "status" : "IN_PROGRESS",
   "reminderTime" : [ 2026, 10, 20, 2, 1 ],
   "workLogs" : [ ],
-  "formattedTotalWork" : "0m",
-  "totalWorkMinutes" : 0
+  "totalWorkMinutes" : 0,
+  "formattedTotalWork" : "0m"
+}, {
+  "id" : 8,
+  "title" : "نسخه اگاهی",
+  "label" : "نسخه گذاری",
+  "status" : "IN_PROGRESS",
+  "reminderTime" : [ 2026, 10, 18, 2, 8 ],
+  "workLogs" : [ ],
+  "totalWorkMinutes" : 0,
+  "formattedTotalWork" : "0m"
 } ]

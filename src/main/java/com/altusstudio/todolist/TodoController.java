@@ -91,6 +91,20 @@ public class TodoController {
         return reminderTime == null || reminderTime.isBlank() ? null : LocalDateTime.parse(reminderTime);
     }
 
+    @PutMapping("/api/tasks/{id}")
+    @ResponseBody
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody TaskRequest request) {
+        Task task = taskRepository.findById(id).orElseThrow();
+        task.setTitle(request.getTitle());
+        task.setLabel(request.getLabel());
+        try {
+            task.setReminderTime(parseReminderTime(request.getReminderTime()));
+        } catch (DateTimeParseException exception) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(storageService.save(task));
+    }
+
     @PatchMapping("/api/tasks/{id}/status")
     @ResponseBody
     public ResponseEntity<Void> updateStatus(@PathVariable Long id, @RequestParam TaskStatus status) {

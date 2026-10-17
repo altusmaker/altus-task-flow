@@ -20,9 +20,10 @@
 </head>
 <body><main class="container-fluid py-4 px-lg-4 board-shell"><header class="board-header"><div><div class="eyebrow">لیست انجام وظایف آلتوس</div><h1 class="board-title">لیست انجام وظایف آلتوس</h1><p class="board-subtitle">کارها را با کشیدن و رها کردن بین ستون‌ها جابه‌جا کنید.</p></div><div class="d-flex gap-2"><a class="btn btn-outline-primary notify-button" href="/worklog-report">گزارش تایم‌شیت</a><button onclick="requestNotificationPermission()" class="btn btn-outline-secondary notify-button">فعال‌سازی یادآوری مرورگر</button></div></header>
   <div class="row g-3"><div class="col-md-4" th:each="colStatus : ${T(com.altusstudio.todolist.TaskStatus).values()}"><section class="column" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" th:data-status="${colStatus.name()}"><div class="column-head"><span class="status-dot"></span><h2 class="column-title fw-bold" th:data-status="${colStatus.name()}" th:text="${colStatus.label}"></h2></div>
-    <div th:each="task : ${colStatus == T(com.altusstudio.todolist.TaskStatus).TODO ? todos : (colStatus == T(com.altusstudio.todolist.TaskStatus).IN_PROGRESS ? inProgress : dones)}" class="task-card" draggable="true" ondragstart="drag(event)" ondragend="dragEnd(event)" th:id="'task-' + ${task.id}" th:data-reminder="${task.reminderTime}"><div class="d-flex justify-content-between align-items-start gap-2"><strong class="task-title" th:text="${task.title}"></strong><button class="btn btn-close btn-xs flex-shrink-0" aria-label="حذف تسک" th:data-id="${task.id}" onclick="deleteTask(this.dataset.id)"></button></div><span th:if="${task.label}" class="task-label" th:text="${task.label}"></span><div class="task-meta mt-2"><span th:if="${task.reminderTime}" class="reminder-badge">⏰ <span th:text="${#temporals.format(task.reminderTime, 'HH:mm - yyyy/MM/dd')}"></span></span><div class="mt-2 d-flex justify-content-between align-items-center"><span class="worklog-badge" th:id="'work-total-'+${task.id}">⏱ <span th:text="${task.formattedTotalWork}"></span></span><button class="btn btn-outline-primary btn-xs" th:data-id="${task.id}" onclick="openWorklogModal(this.dataset.id)">+ کارکرد</button></div></div></div>
+    <div th:each="task : ${colStatus == T(com.altusstudio.todolist.TaskStatus).TODO ? todos : (colStatus == T(com.altusstudio.todolist.TaskStatus).IN_PROGRESS ? inProgress : dones)}" class="task-card" draggable="true" ondragstart="drag(event)" ondragend="dragEnd(event)" th:id="'task-' + ${task.id}" th:data-reminder="${task.reminderTime}" th:data-title="${task.title}" th:data-label="${task.label}"><div class="d-flex justify-content-between align-items-start gap-2"><strong class="task-title" th:text="${task.title}"></strong><button class="btn btn-close btn-xs flex-shrink-0" aria-label="حذف تسک" th:data-id="${task.id}" onclick="deleteTask(this.dataset.id)"></button></div><span th:if="${task.label}" class="task-label" th:text="${task.label}"></span><div class="task-meta mt-2"><span th:if="${task.reminderTime}" class="reminder-badge">⏰ <span th:text="${#temporals.format(task.reminderTime, 'HH:mm - yyyy/MM/dd')}"></span></span><div class="mt-2 d-flex justify-content-between align-items-center"><span class="worklog-badge" th:id="'work-total-'+${task.id}">⏱ <span th:text="${task.formattedTotalWork}"></span></span><button class="btn btn-outline-primary btn-xs" th:data-id="${task.id}" onclick="openWorklogModal(this.dataset.id)">+ کارکرد</button></div></div></div>
     <div class="mt-2 text-center"><button class="btn add-task w-100 btn-sm" th:data-status="${colStatus.name()}" onclick="openAddModal(this.dataset.status)">+ افزودن تسک</button></div></section></div></div></main>
-<div class="modal fade" id="addTaskModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title fw-bold">تسک جدید</h5><button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" id="newTaskStatus"><div class="mb-3"><label class="form-label" for="newTaskTitle">عنوان</label><input type="text" id="newTaskTitle" class="form-control" placeholder="مثلاً آماده‌سازی گزارش"></div><div class="mb-3"><label class="form-label" for="newTaskLabel">برچسب <span class="text-muted">(اختیاری)</span></label><input type="search" id="newTaskLabel" class="form-control" list="taskLabels" placeholder="جستجو یا انتخاب برچسب" autocomplete="off"><datalist id="taskLabels"><option value="بررسی مشکل"><option value="پیاده سازی"><option value="تحلیل"><option value="تست و ارزیابی"><option value="تغییر دیتابیسی"><option value="درخواست پشتیبانی"><option value="رفع خطا"><option value="مستند سازی"><option value="نسخه گذاری"></datalist></div><div class="position-relative"><label class="form-label" for="newTaskReminderDisplay">یادآور <span class="text-muted">(اختیاری)</span></label><input type="hidden" id="newTaskReminder"><input type="text" id="newTaskReminderDisplay" class="form-control jalali-date-input" placeholder="انتخاب تاریخ و ساعت" autocomplete="off"></div></div><div class="modal-footer"><button type="button" class="btn btn-primary px-4" onclick="saveTask()">ذخیره تسک</button></div></div></div></div>
+<div class="modal fade" id="addTaskModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 id="taskModalTitle" class="modal-title fw-bold">تسک جدید</h5><button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" id="newTaskStatus"><input type="hidden" id="editingTaskId"><div class="mb-3"><label class="form-label" for="newTaskTitle">عنوان</label><input type="text" id="newTaskTitle" class="form-control" placeholder="مثلاً آماده‌سازی گزارش"></div><div class="mb-3"><label class="form-label" for="newTaskLabel">برچسب <span class="text-muted">(اختیاری)</span></label><input type="search" id="newTaskLabel" class="form-control" list="taskLabels" placeholder="جستجو یا انتخاب برچسب" autocomplete="off"><datalist id="taskLabels"><option value="بررسی مشکل"><option value="پیاده سازی"><option value="تحلیل"><option value="تست و ارزیابی"><option value="تغییر دیتابیسی"><option value="درخواست پشتیبانی"><option value="رفع خطا"><option value="مستند سازی"><option value="نسخه گذاری"></datalist></div><div class="position-relative"><label class="form-label" for="newTaskReminderDisplay">یادآور <span class="text-muted">(اختیاری)</span></label><input type="hidden" id="newTaskReminder"><input type="text" id="newTaskReminderDisplay" class="form-control jalali-date-input" placeholder="انتخاب تاریخ و ساعت" autocomplete="off"></div></div><div class="modal-footer"><button id="saveTaskButton" type="button" class="btn btn-primary px-4" onclick="saveTask()">ذخیره تسک</button></div></div></div></div>
+<div class="modal fade" id="confirmTaskUpdateModal" tabindex="-1" aria-labelledby="confirmTaskUpdateTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 id="confirmTaskUpdateTitle" class="modal-title fw-bold">تایید ویرایش تسک</h5><button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button></div><div class="modal-body">آیا از ویرایش این کارکرد اطمینان دارید</div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button><button id="confirmTaskUpdateButton" type="button" class="btn btn-primary">Apply changes</button></div></div></div></div>
 <div class="modal fade" id="worklogModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title fw-bold">ثبت کارکرد</h5><button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" id="worklogTaskId"><div class="mb-3"><label class="form-label" for="worklogDuration">مدت زمان</label><input type="text" id="worklogDuration" class="form-control" placeholder="مثال: 4h 45m یا 15m" autocomplete="off"><div id="worklogDurationError" class="invalid-feedback">مدت زمان را به‌صورت 4h 45m یا 15m وارد کنید.</div></div><div><label class="form-label" for="worklogDesc">توضیحات</label><textarea id="worklogDesc" class="form-control" rows="3" placeholder="چه کاری انجام شد؟"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-primary px-4" onclick="saveWorklog()">ثبت کارکرد</button></div></div></div></div>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script><script>
 const addModal=new bootstrap.Modal(document.getElementById('addTaskModal')),worklogModal=new bootstrap.Modal(document.getElementById('worklogModal'));
@@ -75,4 +76,97 @@ window.saveTask=async function(){
   });
   document.querySelector('.notify-button').insertAdjacentElement('beforebegin', button);
 })();
-</script><script>document.addEventListener('DOMContentLoaded',()=>{const header=document.querySelector('.board-header'),titleBlock=header?.firstElementChild;if(!titleBlock||titleBlock.querySelector('.brand-logo'))return;const brand=document.createElement('div');brand.className='d-flex align-items-start';header.insertBefore(brand,titleBlock);brand.appendChild(titleBlock);const logo=document.createElement('img');logo.className='brand-logo';logo.src='/images/todo-logo.png';logo.alt='';brand.insertBefore(logo,titleBlock);});</script><script th:src="@{/js/jalali-picker.js}"></script><script th:src="@{/js/jalali-reminder.js}"></script></body></html>
+</script><script>document.addEventListener('DOMContentLoaded',()=>{const header=document.querySelector('.board-header'),titleBlock=header?.firstElementChild;if(!titleBlock||titleBlock.querySelector('.brand-logo'))return;const brand=document.createElement('div');brand.className='d-flex align-items-start';header.insertBefore(brand,titleBlock);brand.appendChild(titleBlock);const logo=document.createElement('img');logo.className='brand-logo';logo.src='/images/todo-logo.png';logo.alt='';brand.insertBefore(logo,titleBlock);});</script><script th:src="@{/js/jalali-picker.js(v=2)}"></script><script th:src="@{/js/jalali-reminder.js(v=2)}"></script><script>
+(() => {
+  const taskModalTitle = document.getElementById('taskModalTitle');
+  const taskIdInput = document.getElementById('editingTaskId');
+  const titleInput = document.getElementById('newTaskTitle');
+  const labelInput = document.getElementById('newTaskLabel');
+  const statusInput = document.getElementById('newTaskStatus');
+  const reminderInput = document.getElementById('newTaskReminder');
+  const saveButton = document.getElementById('saveTaskButton');
+  const confirmModal = new bootstrap.Modal(document.getElementById('confirmTaskUpdateModal'));
+  const confirmButton = document.getElementById('confirmTaskUpdateButton');
+  const originalOpenAddModal = window.openAddModal;
+  let draggedCard = false;
+
+  window.openAddModal = status => {
+    taskIdInput.value = '';
+    taskModalTitle.textContent = 'افزودن تسک';
+    saveButton.textContent = 'ذخیره تسک';
+    originalOpenAddModal(status);
+  };
+
+  window.openEditTaskModal = card => {
+    taskIdInput.value = card.id.replace('task-', '');
+    statusInput.value = card.closest('.column').dataset.status;
+    titleInput.value = card.dataset.title || '';
+    labelInput.value = card.dataset.label || '';
+    taskModalTitle.textContent = 'ویرایش تسک';
+    saveButton.textContent = 'ذخیره تغییرات';
+    titleInput.classList.remove('is-invalid');
+    window.taskReminderPicker.setValue(card.dataset.tehranReminder || card.dataset.reminder || '');
+    addModal.show();
+  };
+
+  async function persistTask() {
+    const title = titleInput.value.trim();
+    const reminder = reminderInput.value;
+    const taskId = taskIdInput.value;
+    if (!title) {
+      titleInput.classList.add('is-invalid');
+      titleInput.focus();
+      return;
+    }
+    if (reminder && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?$/.test(reminder)) {
+      alert('The reminder date is invalid. Please select it again.');
+      return;
+    }
+    titleInput.classList.remove('is-invalid');
+    saveButton.disabled = true;
+    confirmButton.disabled = true;
+    try {
+      const reminderTime = reminder ? `${reminder.slice(0, 16)}:00` : null;
+      const response = await fetch(taskId ? `/api/tasks/${taskId}` : '/api/tasks', {
+        method: taskId ? 'PUT' : 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({title, label: labelInput.value.trim() || null, status: statusInput.value, reminderTime})
+      });
+      if (!response.ok) throw new Error(`Task request failed with ${response.status}`);
+      location.reload();
+    } catch (error) {
+      saveButton.disabled = false;
+      confirmButton.disabled = false;
+      alert('Unable to save the task. Please try again.');
+      console.error('Unable to save task', error);
+    }
+  }
+
+  window.saveTask = () => {
+    if (!taskIdInput.value) {
+      persistTask();
+      return;
+    }
+    const title = titleInput.value.trim();
+    if (!title) {
+      titleInput.classList.add('is-invalid');
+      titleInput.focus();
+      return;
+    }
+    confirmModal.show();
+  };
+  confirmButton.addEventListener('click', () => {
+    confirmModal.hide();
+    persistTask();
+  });
+
+  document.querySelectorAll('.task-card').forEach(card => {
+    card.addEventListener('dragstart', () => { draggedCard = true; });
+    card.addEventListener('dragend', () => { setTimeout(() => { draggedCard = false; }, 0); });
+    card.addEventListener('click', event => {
+      if (draggedCard || event.target.closest('button, a, input, textarea, select')) return;
+      window.openEditTaskModal(card);
+    });
+  });
+})();
+</script></body></html>
