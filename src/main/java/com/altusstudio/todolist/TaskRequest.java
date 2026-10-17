@@ -1,4 +1,4 @@
-package com.amirdehi.simpletodo;
+package com.altusstudio.todolist;
 
 import java.time.LocalDateTime;
 

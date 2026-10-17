@@ -1,4 +1,4 @@
-package com.amirdehi.simpletodo;
+package com.altusstudio.todolist;
 
 public enum TaskStatus {
     TODO("آماده انجام"), IN_PROGRESS("در حال انجام"), DONE("انجام شده");

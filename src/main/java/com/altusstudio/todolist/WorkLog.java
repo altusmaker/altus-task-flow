@@ -1,4 +1,4 @@
-package com.amirdehi.simpletodo;
+package com.altusstudio.todolist;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

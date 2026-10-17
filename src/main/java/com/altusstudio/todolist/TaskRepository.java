@@ -1,4 +1,4 @@
-package com.amirdehi.simpletodo;
+package com.altusstudio.todolist;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;

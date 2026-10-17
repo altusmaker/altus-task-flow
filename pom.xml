@@ -10,10 +10,10 @@
         <relativePath/>
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>simple-todo</artifactId>
+    <artifactId>altus-todo-list</artifactId>
     <version>1.0.0</version>
-    <name>simple-todo</name>
-    <description>Simple Kanban Todo with Worklog</description>
+    <name>altus-todo-list</name>
+    <description>Altus Todo List with worklog</description>
 
     <properties>
         <java.version>17</java.version>
