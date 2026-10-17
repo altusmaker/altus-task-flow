@@ -3,12 +3,22 @@ package com.amirdehi.simpletodo;
 import jakarta.persistence.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +105,48 @@ interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByOrderByStatusAsc();
 }
 
+/** Keeps a human-readable copy of the persisted H2 data in the project data directory. */
+@Service
+class TodoStorageService {
+    private static final Path BACKUP_FILE = Path.of("data", "todo-backup.json");
+
+    private final TaskRepository taskRepository;
+    private final ObjectMapper objectMapper;
+
+    TodoStorageService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+        this.objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    }
+
+    Task save(Task task) {
+        Task savedTask = taskRepository.saveAndFlush(task);
+        writeBackup();
+        return savedTask;
+    }
+
+    void delete(Long id) {
+        taskRepository.deleteById(id);
+        taskRepository.flush();
+        writeBackup();
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    void createStartupBackup() {
+        writeBackup();
+    }
+
+    private void writeBackup() {
+        try {
+            Files.createDirectories(BACKUP_FILE.getParent());
+            Path temporaryFile = Files.createTempFile(BACKUP_FILE.getParent(), "todo-backup-", ".json");
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(temporaryFile.toFile(), taskRepository.findAll());
+            Files.move(temporaryFile, BACKUP_FILE, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+        } catch (IOException exception) {
+            throw new IllegalStateException("Could not write todo backup to " + BACKUP_FILE.toAbsolutePath(), exception);
+        }
+    }
+}
+
 // --- DTOs ---
 class TaskRequest {
     private String title;
@@ -122,8 +174,12 @@ class WorkLogRequest {
 class TodoController {
 
     private final TaskRepository taskRepository;
+    private final TodoStorageService storageService;
 
-    TodoController(TaskRepository taskRepository) { this.taskRepository = taskRepository; }
+    TodoController(TaskRepository taskRepository, TodoStorageService storageService) {
+        this.taskRepository = taskRepository;
+        this.storageService = storageService;
+    }
 
     // صفحه اصلی
     @GetMapping("/")
@@ -144,7 +200,7 @@ class TodoController {
         task.setTitle(req.getTitle());
         task.setStatus(req.getStatus());
         task.setReminderTime(req.getReminderTime());
-        return ResponseEntity.ok(taskRepository.save(task));
+        return ResponseEntity.ok(storageService.save(task));
     }
 
     // API برای تغییر وضعیت (Drag & Drop support)
@@ -153,7 +209,7 @@ class TodoController {
     public ResponseEntity<Void> updateStatus(@PathVariable Long id, @RequestParam TaskStatus status) {
         Task task = taskRepository.findById(id).orElseThrow();
         task.setStatus(status);
-        taskRepository.save(task);
+        storageService.save(task);
         return ResponseEntity.ok().build();
     }
 
@@ -164,14 +220,14 @@ class TodoController {
         Task task = taskRepository.findById(id).orElseThrow();
         WorkLog log = new WorkLog(null, req.getMinutes(), req.getDescription(), LocalDateTime.now());
         task.getWorkLogs().add(log);
-        return ResponseEntity.ok(taskRepository.save(task));
+        return ResponseEntity.ok(storageService.save(task));
     }
 
     // API برای حذف تسک
     @DeleteMapping("/api/tasks/{id}")
     @ResponseBody
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        taskRepository.deleteById(id);
+        storageService.delete(id);
         return ResponseEntity.ok().build();
     }
 }
