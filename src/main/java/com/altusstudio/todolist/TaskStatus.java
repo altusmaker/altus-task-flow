@@ -5,5 +5,7 @@ public enum TaskStatus {
 
     public final String label;
 
-    TaskStatus(String label) { this.label = label; }
+    TaskStatus(String label) {
+        this.label = label;
+    }
 }

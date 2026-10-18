@@ -11,7 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-/** Keeps a human-readable copy of the persisted H2 data in the project data directory. */
+/**
+ * Keeps a human-readable copy of the persisted H2 data in the project data directory.
+ */
 @Service
 public class TodoStorageService {
     private static final Path BACKUP_FILE = Path.of("data", "todo-backup.json");
@@ -36,7 +38,9 @@ public class TodoStorageService {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    void createStartupBackup() { writeBackup(); }
+    void createStartupBackup() {
+        writeBackup();
+    }
 
     private void writeBackup() {
         try {
