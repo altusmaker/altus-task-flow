@@ -15,8 +15,8 @@
     "description" : "کار زیاد",
     "loggedAt" : [ 2026, 10, 18, 1, 26, 40, 995265000 ]
   } ],
-  "formattedTotalWork" : "3h 0m",
-  "totalWorkMinutes" : 180
+  "totalWorkMinutes" : 180,
+  "formattedTotalWork" : "3h 0m"
 }, {
   "id" : 3,
   "title" : "تست جدید",
@@ -34,8 +34,8 @@
     "description" : "تست زیاد",
     "loggedAt" : [ 2026, 10, 18, 1, 59, 46, 74191000 ]
   } ],
-  "formattedTotalWork" : "8h 30m",
-  "totalWorkMinutes" : 510
+  "totalWorkMinutes" : 510,
+  "formattedTotalWork" : "8h 30m"
 }, {
   "id" : 7,
   "title" : "نسخه امنیت",
@@ -43,8 +43,8 @@
   "status" : "IN_PROGRESS",
   "reminderTime" : [ 2026, 10, 20, 2, 1 ],
   "workLogs" : [ ],
-  "formattedTotalWork" : "0m",
-  "totalWorkMinutes" : 0
+  "totalWorkMinutes" : 0,
+  "formattedTotalWork" : "0m"
 }, {
   "id" : 8,
   "title" : "نسخه اگاهی",
@@ -52,6 +52,6 @@
   "status" : "IN_PROGRESS",
   "reminderTime" : [ 2026, 10, 18, 2, 8 ],
   "workLogs" : [ ],
-  "formattedTotalWork" : "0m",
-  "totalWorkMinutes" : 0
+  "totalWorkMinutes" : 0,
+  "formattedTotalWork" : "0m"
 } ]

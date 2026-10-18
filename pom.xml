@@ -9,11 +9,11 @@
         <version>3.2.2</version>
         <relativePath/>
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>altus-todo-list</artifactId>
-    <version>3.1.6</version>
-    <name>altus-todo-list</name>
-    <description>Altus Todo List with worklog</description>
+    <groupId>com.altusstudio</groupId>
+    <artifactId>altus-task-flow</artifactId>
+    <version>3.1.7</version>
+    <name>altus-task-flow</name>
+    <description>The simplicity of a daily to-do list meets the power of issue tracking and worklogs.</description>
 
     <properties>
         <java.version>17</java.version>
