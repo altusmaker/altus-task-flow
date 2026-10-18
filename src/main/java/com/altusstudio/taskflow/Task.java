@@ -1,4 +1,4 @@
-package com.altusstudio.todolist;
+package com.altusstudio.taskflow;
 
 import jakarta.persistence.*;
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>گزارش کارکرد</title>
+    <title>گزارش کارکردها 📊</title>
     <link rel="icon" type="image/png" sizes="512x512" th:href="@{/images/todo-logo.png}">
     <link th:href="@{/css/vazir.css}" rel="stylesheet">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
@@ -48,16 +48,20 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div><h1 class="h3 fw-bold mb-1">گزارش کارکرد</h1>
             <p class="text-secondary mb-0">گزارش کارکرد در بازه تاریخ انتخاب‌شده</p></div>
-        <a href="/" class="btn btn-outline-secondary">بازگشت به فهرست</a></div>
+        <a href="/" class="btn btn-outline-secondary">بازگشت به تسک فلو</a></div>
     <section class="panel p-4 mb-4">
         <form id="rangeForm" class="row g-3 align-items-end"><input type="hidden" id="fromIso" th:value="${from}"><input
                 type="hidden" id="toIso" th:value="${to}">
-            <div class="col-md-5 position-relative"><label class="form-label" for="fromPicker">از تاریخ
-                (شمسی)</label><input id="fromPicker" class="form-control jalali-date-input" type="text"
-                                     autocomplete="off"></div>
-            <div class="col-md-5 position-relative"><label class="form-label" for="toPicker">تا تاریخ
-                (شمسی)</label><input id="toPicker" class="form-control jalali-date-input" type="text"
-                                     autocomplete="off"></div>
+            <div class="col-md-5 position-relative">
+                <label class="form-label" for="fromPicker">از تاریخ (شمسی)</label>
+                <input id="fromPicker" class="form-control jalali-date-input" type="text"
+                                     autocomplete="off">
+            </div>
+            <div class="col-md-5 position-relative">
+                <label class="form-label" for="toPicker">تا تاریخ (شمسی)</label>
+                <input id="toPicker" class="form-control jalali-date-input" type="text"
+                                     autocomplete="off">
+            </div>
             <div class="col-md-2">
                 <button class="btn btn-primary w-100" type="submit">نمایش گزارش</button>
             </div>
@@ -69,11 +73,11 @@
         <div class="d-flex justify-content-between align-items-center p-4 border-bottom">
             <div><h2 class="h5 fw-bold mb-1">زمان ثبت‌شده</h2><span class="text-secondary" id="activeRange"></span>
             </div>
-            <div class="d-flex align-items-center gap-3"><a class="btn btn-success"
-                                                            th:href="@{/worklog-report/export(from=${from},to=${to})}">دانلود
-                اکسل</a>
-                <div class="total"><span class="persian-number" th:text="${totalMinutes / 60}"></span> ساعت و <span
-                        class="persian-number" th:text="${totalMinutes % 60}"></span> دقیقه (جمع)
+            <div class="d-flex align-items-center gap-3">
+                <a class="btn btn-success" th:href="@{/worklog-report/export(from=${from},to=${to})}">دانلود اکسل</a>
+                <div class="total">
+                    <span class="persian-number" th:text="${totalMinutes / 60}"></span> ساعت و
+                    <span class="persian-number" th:text="${totalMinutes % 60}"></span> دقیقه (جمع)
                 </div>
             </div>
         </div>
@@ -82,10 +86,10 @@
             <table class="table mb-0 align-middle">
                 <thead class="table-light">
                 <tr>
-                    <th>تسک</th>
-                    <th>تاریخ و ساعت</th>
+                    <th>عنوان تسک</th>
+                    <th>تاریخ ثبت کارکرد</th>
                     <th>توضیحات</th>
-                    <th>مدت</th>
+                    <th>مدت زمان کارکرد</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -93,8 +97,9 @@
                     <td class="fw-semibold" th:text="${entry.taskTitle}"></td>
                     <td class="jalali-date" th:data-date="${entry.loggedAt}"></td>
                     <td th:text="${entry.description}"></td>
-                    <td><span class="persian-number" th:text="${entry.durationMinutes / 60}"></span> ساعت و <span
-                            class="persian-number" th:text="${entry.durationMinutes % 60}"></span> دقیقه
+                    <td>
+                        <span class="persian-number" th:text="${entry.durationMinutes / 60}"></span> ساعت و
+                        <span class="persian-number" th:text="${entry.durationMinutes % 60}"></span> دقیقه
                     </td>
                 </tr>
                 </tbody>

@@ -1,4 +1,4 @@
-package com.altusstudio.todolist;
+package com.altusstudio.taskflow;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

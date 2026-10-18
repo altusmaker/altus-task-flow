@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لیست انجام وظایف آلتوس</title>
+    <title>آلتوس تسک فلو 📋</title>
     <link rel="icon" type="image/png" sizes="512x512" th:href="@{/images/todo-logo.png}">
     <link rel="apple-touch-icon" th:href="@{/images/todo-logo.png}">
     <link th:href="@{/css/vazir.css}" rel="stylesheet">
@@ -64,13 +64,13 @@
 
         .eyebrow {
             color: var(--primary);
-            font-size: .78rem;
+            font-size: .73rem;
             font-weight: 700;
             letter-spacing: .04em
         }
 
         .board-title {
-            font-size: clamp(1.55rem, 3vw, 2.2rem);
+            font-size: clamp(1.2rem, 3vw, 1.9rem);
             font-weight: 800;
             margin: .15rem 0 0
         }
@@ -101,8 +101,8 @@
             border: 1px solid var(--border);
             border-radius: 1rem;
             padding: .85rem;
-            min-height: 68vh;
-            max-height: 68vh;
+            min-height: 78vh;
+            max-height: 78vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -371,10 +371,10 @@
     </style>
     <link th:href="@{/css/jalali-reminder.css}" rel="stylesheet">
     <style>.brand-logo {
-        width: 3.25rem;
-        height: 3.25rem;
+        width: 3.8rem;
+        height: 3.8rem;
         object-fit: cover;
-        border-radius: .85rem;
+        border-radius: 0.8rem;
         box-shadow: 0 5px 14px rgba(79, 70, 229, .22);
         margin-left: .85rem;
         flex: 0 0 auto
@@ -391,27 +391,25 @@
 <main class="container-fluid py-4 px-lg-4 board-shell">
     <header class="board-header">
         <div>
-            <div class="eyebrow">لیست انجام وظایف آلتوس</div>
-            <h1 class="board-title">لیست انجام وظایف آلتوس</h1>
-            <p class="board-subtitle">کارها را با کشیدن و رها کردن بین ستون‌ها جابه‌جا کنید.</p></div>
-        <div class="d-flex gap-2"><a class="btn btn-outline-primary notify-button" href="/worklog-report">گزارش
-            تایم‌شیت</a>
-            <button onclick="requestNotificationPermission()" class="btn btn-outline-secondary notify-button">فعال‌سازی
-                یادآوری مرورگر
-            </button>
+            <div class="eyebrow">یک چک‌لیست ساده، با امکان ثبت کارکرد</div>
+            <h1 class="board-title">آلتوس تسک‌فلو</h1>
+        </div>
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-secondary notify-button" href="/worklog-report">📊 گزارش کارکردها</a>
+            <button onclick="requestNotificationPermission()" class="btn btn-outline-secondary notify-button">🔔 فعال‌سازی یادآوری مرورگر</button>
         </div>
     </header>
     <div class="row g-3">
-        <div class="col-md-4" th:each="colStatus : ${T(com.altusstudio.todolist.TaskStatus).values()}">
+        <div class="col-md-4" th:each="colStatus : ${T(com.altusstudio.taskflow.TaskStatus).values()}">
             <section class="column" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"
                      th:data-status="${colStatus.name()}">
                 <div class="column-head"><span class="status-dot"></span>
                     <h2 class="column-title fw-bold" th:data-status="${colStatus.name()}"
                         th:text="${colStatus.label}"></h2><span class="task-count"
-                                                                th:text="${(colStatus == T(com.altusstudio.todolist.TaskStatus).TODO ? todos : (colStatus == T(com.altusstudio.todolist.TaskStatus).IN_PROGRESS ? inProgress : dones)).size()}"></span>
+                                                                th:text="${(colStatus == T(com.altusstudio.taskflow.TaskStatus).TODO ? todos : (colStatus == T(com.altusstudio.taskflow.TaskStatus).IN_PROGRESS ? inProgress : dones)).size()}"></span>
                 </div>
                 <div class="task-list">
-                    <div th:each="task : ${colStatus == T(com.altusstudio.todolist.TaskStatus).TODO ? todos : (colStatus == T(com.altusstudio.todolist.TaskStatus).IN_PROGRESS ? inProgress : dones)}"
+                    <div th:each="task : ${colStatus == T(com.altusstudio.taskflow.TaskStatus).TODO ? todos : (colStatus == T(com.altusstudio.taskflow.TaskStatus).IN_PROGRESS ? inProgress : dones)}"
                          class="task-card" draggable="true" ondragstart="drag(event)" ondragend="dragEnd(event)"
                          th:id="'task-' + ${task.id}" th:data-reminder="${task.reminderTime}"
                          th:data-title="${task.title}" th:data-label="${task.label}">
@@ -420,14 +418,16 @@
                             <button class="btn btn-close btn-xs flex-shrink-0" aria-label="حذف تسک"
                                     th:data-id="${task.id}" onclick="deleteTask(this.dataset.id)"></button>
                         </div>
-                        <span th:if="${task.label}" class="task-label" th:text="${task.label}"></span>
-                        <div class="task-meta mt-2"><span th:if="${task.reminderTime}" class="reminder-badge">⏰ <span
+                        <span th:if="${task.label}" class="task-label">🏷️ <span
+                                th:text="${task.label}"></span></span>
+                        <div class="task-meta mt-2">
+                            <span th:if="${task.reminderTime}" class="reminder-badge">⏰ <span
                                 th:text="${#temporals.format(task.reminderTime, 'HH:mm - yyyy/MM/dd')}"></span></span>
-                            <div class="mt-2 d-flex justify-content-between align-items-center"><span
-                                    class="worklog-badge" th:id="'work-total-'+${task.id}">⏱ <span
+                            <div class="mt-2 d-flex justify-content-between align-items-center">
+                                <span class="worklog-badge" th:id="'work-total-'+${task.id}">⏱️ <span
                                     th:text="${task.formattedTotalWork}"></span></span>
                                 <button class="btn btn-outline-primary btn-xs" th:data-id="${task.id}"
-                                        onclick="openWorklogModal(this.dataset.id)">+ کارکرد
+                                        onclick="openWorklogModal(this.dataset.id)">+ ثبت کارکرد
                                 </button>
                             </div>
                         </div>
@@ -452,23 +452,28 @@
                 <div class="mb-3"><label class="form-label" for="newTaskTitle">عنوان</label><input type="text"
                                                                                                    id="newTaskTitle"
                                                                                                    class="form-control"
-                                                                                                   placeholder="مثلاً آماده‌سازی گزارش">
+                                                                                                   placeholder="پاسخ به نامه ارزیابی">
                 </div>
                 <div class="mb-3"><label class="form-label" for="newTaskLabel">برچسب <span
                         class="text-muted">(اختیاری)</span></label><input type="search" id="newTaskLabel"
                                                                           class="form-control" list="taskLabels"
-                                                                          placeholder="جستجو یا انتخاب برچسب"
+                                                                          placeholder="انتخاب برچسب متناسب"
                                                                           autocomplete="off">
                     <datalist id="taskLabels">
-                        <option value="بررسی مشکل">
-                        <option value="پیاده سازی">
                         <option value="تحلیل">
-                        <option value="تست و ارزیابی">
-                        <option value="تغییر دیتابیسی">
-                        <option value="درخواست پشتیبانی">
-                        <option value="رفع خطا">
                         <option value="مستند سازی">
+                        <option value="پیاده سازی">
+                        <option value="بررسی مشکل">
+                        <option value="رفع خطا">
+                        <option value="تست و ارزیابی">
+                        <option value="درخواست پشتیبانی">
                         <option value="نسخه گذاری">
+                        <option value="تغییر دیتابیسی">
+                        <option value="پیگیری">
+                        <option value="جلسات">
+                        <option value="گزارشات">
+                        <option value="امور اداری">
+                        <option value="امور رفاهی">
                     </datalist>
                 </div>
                 <div class="position-relative"><label class="form-label" for="newTaskReminderDisplay">یادآور <span
@@ -490,10 +495,10 @@
             <div class="modal-header"><h5 id="confirmTaskUpdateTitle" class="modal-title fw-bold">تایید ویرایش تسک</h5>
                 <button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">آیا از ویرایش این کارکرد اطمینان دارید</div>
+            <div class="modal-body">آیا از ویرایش این تسک اطمینان دارید؟</div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button id="confirmTaskUpdateButton" type="button" class="btn btn-primary">Apply changes</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">لفو</button>
+                <button id="confirmTaskUpdateButton" type="button" class="btn btn-primary">اعمال تغییرات</button>
             </div>
         </div>
     </div>
@@ -508,10 +513,9 @@
                 <div class="mb-3"><label class="form-label" for="worklogDuration">مدت زمان</label><input type="text"
                                                                                                          id="worklogDuration"
                                                                                                          class="form-control"
-                                                                                                         placeholder="مثال: 4h 45m یا 15m"
+                                                                                                         placeholder="1h 15m"
                                                                                                          autocomplete="off">
-                    <div id="worklogDurationError" class="invalid-feedback">مدت زمان را به‌صورت 4h 45m یا 15m وارد
-                        کنید.
+                    <div id="worklogDurationError" class="invalid-feedback">مدت زمان را با الگوی 4h 45m وارد کنید.
                     </div>
                 </div>
                 <div><label class="form-label" for="worklogDesc">توضیحات</label><textarea id="worklogDesc"
@@ -553,7 +557,7 @@
     }
 
     function deleteTask(id) {
-        if (confirm('آیا مطمئن هستید؟')) fetch('/api/tasks/' + id, {method: 'DELETE'}).then(() => location.reload())
+        if (confirm('آآیا از حذف این تسک اطمینان دارید؟')) fetch('/api/tasks/' + id, {method: 'DELETE'}).then(() => location.reload())
     }
 
     function openWorklogModal(id) {
@@ -660,7 +664,7 @@
             return;
         }
         if (reminder && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?$/.test(reminder)) {
-            alert('The reminder date is invalid. Please select it again.');
+            alert('تاریخ یادآوری نامعتبر است. لطفاً دوباره انتخاب کنید.');
             return;
         }
         titleInput.classList.remove('is-invalid');
@@ -677,12 +681,12 @@
                     reminderTime
                 })
             });
-            if (!response.ok) throw new Error(`Task request failed with ${response.status}`);
+            if (!response.ok) throw new Error(`خطا در ارسال درخواست تسک: ${response.status}`);
             location.reload();
         } catch (error) {
             button.disabled = false;
-            alert('Unable to save the task. Please try again.');
-            console.error('Unable to save task', error);
+            alert('امکان ذخیره تسک وجود ندارد. لطفاً دوباره تلاش کنید.');
+            console.error('خطا در ذخیره تسک: ', error);
         }
     };
 </script>
@@ -697,7 +701,7 @@
             const isDark = theme === 'dark';
             document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
             button.setAttribute('aria-pressed', String(isDark));
-            button.textContent = isDark ? '\u2600\ufe0f \u062d\u0627\u0644\u062a \u0631\u0648\u0634\u0646' : '\ud83c\udf19 \u062d\u0627\u0644\u062a \u062a\u0627\u0631\u06cc\u06a9';
+            button.textContent = isDark ? '☀️ حالت روشن' : '🌙 حالت تاریک';
         }
 
         applyTheme(localStorage.getItem(storageKey) === 'dark' ? 'dark' : 'light');
@@ -767,7 +771,7 @@
                 return;
             }
             if (reminder && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?$/.test(reminder)) {
-                alert('The reminder date is invalid. Please select it again.');
+                alert('تاریخ یادآوری نامعتبر است. لطفاً دوباره انتخاب کنید.');
                 return;
             }
             titleInput.classList.remove('is-invalid');
@@ -785,13 +789,13 @@
                         reminderTime
                     })
                 });
-                if (!response.ok) throw new Error(`Task request failed with ${response.status}`);
+                if (!response.ok) throw new Error(`خطا در ارسال درخواست تسک:  ${response.status}`);
                 location.reload();
             } catch (error) {
                 saveButton.disabled = false;
                 confirmButton.disabled = false;
-                alert('Unable to save the task. Please try again.');
-                console.error('Unable to save task', error);
+                alert('امکان ذخیره تسک وجود ندارد. لطفاً دوباره تلاش کنید.');
+                console.error('خطا در ذخیره تسک: ', error);
             }
         }
 

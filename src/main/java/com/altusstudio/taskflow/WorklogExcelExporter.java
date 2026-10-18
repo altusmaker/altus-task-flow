@@ -1,4 +1,4 @@
-package com.altusstudio.todolist;
+package com.altusstudio.taskflow;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -37,11 +37,11 @@ public final class WorklogExcelExporter {
             bodyStyle.setWrapText(true);
 
             Row title = sheet.createRow(0);
-            title.createCell(0).setCellValue("گزارش تایم‌شیت");
+            title.createCell(0).setCellValue("گزارش کارکردهای ثبت شده");
             Row summary = sheet.createRow(1);
-            summary.createCell(0).setCellValue("جمع زمان ثبت‌شده");
+            summary.createCell(0).setCellValue("جمع زمان ثبت شده");
             summary.createCell(1).setCellValue(totalMinutes / 60 + " ساعت و " + totalMinutes % 60 + " دقیقه");
-            String[] headers = {"تسک", "تاریخ و ساعت", "توضیحات", "مدت (دقیقه)"};
+            String[] headers = {"عنوان تسک", "تاریخ ثبت کارکرد", "توضیحات", "مدت زمان کارکرد (دقیقه)"};
             Row header = sheet.createRow(3);
             for (int column = 0; column < headers.length; column++) {
                 Cell cell = header.createCell(column);

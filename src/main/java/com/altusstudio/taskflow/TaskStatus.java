@@ -1,4 +1,4 @@
-package com.altusstudio.todolist;
+package com.altusstudio.taskflow;
 
 public enum TaskStatus {
     TODO("آماده انجام"), IN_PROGRESS("در حال انجام"), DONE("انجام شده");

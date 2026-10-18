@@ -49,7 +49,7 @@
   "id" : 8,
   "title" : "نسخه اگاهی",
   "label" : "نسخه گذاری",
-  "status" : "IN_PROGRESS",
+  "status" : "TODO",
   "reminderTime" : [ 2026, 10, 18, 2, 8 ],
   "workLogs" : [ ],
   "totalWorkMinutes" : 0,

@@ -1,4 +1,4 @@
-package com.altusstudio.todolist;
+package com.altusstudio.taskflow;
 
 import java.awt.Desktop;
 import java.net.URI;
