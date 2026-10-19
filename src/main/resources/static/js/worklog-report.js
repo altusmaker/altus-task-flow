@@ -1,4 +1,14 @@
 const persianDigits = value => String(value).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+const applyStoredTheme = () => {
+    const savedTheme = localStorage.getItem('todo-theme') || localStorage.getItem('altus-theme');
+    document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+};
+
+applyStoredTheme();
+window.addEventListener('storage', event => {
+    if (event.key === 'todo-theme' || event.key === 'altus-theme') applyStoredTheme();
+});
+
 const fromPicker = JalaliDatePicker.create({
     input: document.getElementById('fromPicker'),
     valueInput: document.getElementById('fromIso')

@@ -1,6 +1,32 @@
+:root {
+    color-scheme: light;
+    --ink: #263947;
+    --muted: #637581;
+    --canvas: #f3f7f8;
+    --surface: #fff;
+    --primary: #07658d;
+    --primary-dark: #054d6b;
+    --border: #d9e4e8;
+    --picker-soft: #e2f1f6;
+    --shadow: 0 10px 28px rgba(38, 57, 71, .10)
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+    --ink: #e7f1f4;
+    --muted: #a5bbc4;
+    --canvas: #14242d;
+    --surface: #1d303a;
+    --primary: #39a9cf;
+    --primary-dark: #79cae2;
+    --border: #36505d;
+    --picker-soft: #274a58;
+    --shadow: 0 10px 28px rgba(0, 0, 0, .30)
+}
+
 body {
-    background: #f5f7fb;
-    color: #1f2a44;
+    background: var(--canvas);
+    color: var(--ink);
     font-family: Vazirmatn, Vazir, Tahoma, sans-serif
 }
 
@@ -9,14 +35,34 @@ body {
 }
 
 .panel {
-    background: #fff;
-    border: 1px solid #e4e8f1;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 1rem;
-    box-shadow: 0 10px 28px rgba(35, 48, 82, .08)
+    box-shadow: var(--shadow)
 }
 
 .form-control {
-    border-radius: .6rem
+    border-color: var(--border);
+    border-radius: .6rem;
+    background: var(--surface);
+    color: var(--ink)
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: 0 0 0 .2rem rgba(57, 169, 207, .18)
+}
+
+.btn-primary {
+    background: var(--primary);
+    border-color: var(--primary)
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark)
 }
 
 .total {
@@ -29,6 +75,14 @@ body {
 
 .empty-state {
     padding: 3.5rem;
-    color: #6c7891;
+    color: var(--muted);
     text-align: center
 }
+
+.text-secondary { color: var(--muted) !important }
+
+[data-theme="dark"] .border-bottom { border-color: var(--border) !important }
+[data-theme="dark"] .table { --bs-table-color: var(--ink); --bs-table-bg: var(--surface); --bs-table-border-color: var(--border) }
+[data-theme="dark"] .table-light { --bs-table-color: var(--ink); --bs-table-bg: #263b46; --bs-table-border-color: var(--border) }
+[data-theme="dark"] .btn-outline-secondary { --bs-btn-color: var(--muted); --bs-btn-border-color: var(--border); --bs-btn-hover-bg: #284550; --bs-btn-hover-border-color: var(--primary); --bs-btn-hover-color: var(--ink) }
+[data-theme="dark"] .total { background: #174552; color: #a4e5f3 }
