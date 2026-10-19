@@ -221,4 +221,11 @@ document.addEventListener('DOMContentLoaded', () => {
     setupBrand();
     setupTaskEditor()
 });
+
+window.addEventListener('load', () => {
+    const loader = document.querySelector('.app-loader');
+    if (!loader) return;
+    window.setTimeout(() => loader.classList.add('is-hidden'), 1500);
+    window.setTimeout(() => loader.remove(), 1700)
+});
 setInterval(checkReminders, 30000);

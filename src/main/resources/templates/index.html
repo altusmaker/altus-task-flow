@@ -12,6 +12,12 @@
     <link th:href="@{/css/jalali-reminder.css}" rel="stylesheet">
 </head>
 <body>
+<div class="app-loader" role="status" aria-label="Loading Altus">
+    <div class="app-loader__content">
+        <img class="app-loader__logo" th:src="@{/images/altus-logo-square.png}" alt="Altus">
+        <div class="app-loader__bar" aria-hidden="true"></div>
+    </div>
+</div>
 <main class="container-fluid py-4 px-lg-4 board-shell">
     <header class="board-header">
         <div>
