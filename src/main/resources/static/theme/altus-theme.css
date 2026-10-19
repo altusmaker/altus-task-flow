@@ -1,0 +1,75 @@
+/*
+ * Altus Theme Kit — load after Bootstrap and before component-specific styles.
+ * Set <html data-theme="dark"> to activate the dark palette.
+ */
+:root {
+    color-scheme: light;
+    --altus-navy: #263947;
+    --altus-teal: #07658d;
+    --altus-sky: #39a9cf;
+    --altus-ink: #263947;
+    --altus-muted: #637581;
+    --altus-canvas: #f3f7f8;
+    --altus-surface: #fff;
+    --altus-border: #d9e4e8;
+    --altus-primary: var(--altus-teal);
+    --altus-primary-dark: #054d6b;
+    --altus-shadow: 0 10px 28px rgba(38, 57, 71, .10);
+    --ink: var(--altus-ink);
+    --muted: var(--altus-muted);
+    --canvas: var(--altus-canvas);
+    --surface: var(--altus-surface);
+    --border: var(--altus-border);
+    --primary: var(--altus-primary);
+    --primary-dark: var(--altus-primary-dark);
+    --shadow: var(--altus-shadow)
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+    --altus-ink: #e7f1f4;
+    --altus-muted: #a5bbc4;
+    --altus-canvas: #14242d;
+    --altus-surface: #1d303a;
+    --altus-border: #36505d;
+    --altus-primary: #39a9cf;
+    --altus-primary-dark: #79cae2;
+    --altus-shadow: 0 10px 28px rgba(0, 0, 0, .30)
+}
+
+body.altus-app {
+    min-height: 100vh;
+    background: radial-gradient(circle at 90% 0, #d7edf3 0, transparent 30%), var(--canvas);
+    color: var(--ink);
+    font-family: Vazirmatn, Vazir, Tahoma, sans-serif
+}
+
+[data-theme="dark"] body.altus-app {
+    background: radial-gradient(circle at 90% 0, #1c3c4d 0, transparent 30%), var(--canvas)
+}
+
+.altus-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    box-shadow: var(--shadow)
+}
+
+.altus-btn-primary {
+    color: #fff;
+    background: var(--primary);
+    border-color: var(--primary)
+}
+
+.altus-btn-primary:hover { color: #fff; background: var(--primary-dark); border-color: var(--primary-dark) }
+.altus-input { border: 1px solid var(--border); border-radius: .6rem; font-family: inherit }
+.altus-input:focus { border-color: var(--primary); box-shadow: 0 0 0 .2rem rgba(7, 101, 141, .15) }
+
+.altus-loader { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; background: var(--canvas); transition: opacity .45s ease, visibility .45s ease }
+.altus-loader.is-hidden { opacity: 0; visibility: hidden; pointer-events: none }
+.altus-loader__content { display: grid; gap: 1rem; justify-items: center }
+.altus-loader__logo { width: min(38vw, 11rem); height: auto; animation: altus-pulse 1.25s ease-in-out infinite alternate }
+.altus-loader__bar { width: 8rem; height: .25rem; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--primary) 18%, transparent) }
+.altus-loader__bar::after { display: block; width: 45%; height: 100%; content: ''; border-radius: inherit; background: var(--primary); animation: altus-progress 1.15s ease-in-out infinite }
+@keyframes altus-pulse { to { transform: scale(1.04) } }
+@keyframes altus-progress { from { transform: translateX(-110%) } to { transform: translateX(250%) } }

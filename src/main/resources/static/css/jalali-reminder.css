@@ -10,11 +10,12 @@
 }
 
 .jalali-picker {
-    border: 1px solid #dce1eb;
+    border: 1px solid var(--border, #d9e4e8);
     border-radius: .7rem;
     padding: .75rem;
-    background: #fff;
-    box-shadow: 0 12px 28px rgba(35, 48, 82, .16)
+    background: var(--surface, #fff);
+    color: var(--ink, #263947);
+    box-shadow: var(--shadow, 0 12px 28px rgba(38, 57, 71, .16))
 }
 
 .jalali-picker-head {
@@ -26,8 +27,8 @@
 
 .jalali-picker-head button {
     border: 0;
-    background: #eef1ff;
-    color: #4f46e5;
+    background: color-mix(in srgb, var(--primary, #07658d) 12%, transparent);
+    color: var(--primary, #07658d);
     border-radius: .45rem;
     width: 2rem;
     height: 2rem
@@ -45,7 +46,7 @@
 }
 
 .jalali-week {
-    color: #6c7891;
+    color: var(--muted, #637581);
     font-size: .72rem;
     margin-bottom: .25rem
 }
@@ -58,7 +59,7 @@
 }
 
 .jalali-days button:hover, .jalali-days button.selected {
-    background: #4f46e5;
+    background: var(--primary, #07658d);
     color: #fff
 }
 
