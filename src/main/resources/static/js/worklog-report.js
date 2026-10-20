@@ -30,3 +30,50 @@ document.getElementById('rangeForm').addEventListener('submit', event => {
     }
     location.href = '/worklog-report?from=' + fromIso.value + '&to=' + toIso.value
 });
+
+const editWorklogModal = new bootstrap.Modal(document.getElementById('editWorklogModal'));
+const editWorklogTaskId = document.getElementById('editWorklogTaskId');
+const editWorklogId = document.getElementById('editWorklogId');
+const editWorklogDuration = document.getElementById('editWorklogDuration');
+const editWorklogDescription = document.getElementById('editWorklogDescription');
+
+function formatWorklogDuration(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return hours ? `${hours}h ${remainingMinutes}m` : `${remainingMinutes}m`;
+}
+
+function parseWorklogDuration(value) {
+    const match = value.trim().match(/^(?:(\d+)h)?\s*(?:(\d+)m)?$/i);
+    if (!match || (!match[1] && !match[2])) return null;
+    const minutes = Number(match[1] || 0) * 60 + Number(match[2] || 0);
+    return minutes > 0 ? minutes : null;
+}
+
+document.querySelectorAll('.edit-worklog').forEach(button => button.addEventListener('click', () => {
+    editWorklogTaskId.value = button.dataset.taskId;
+    editWorklogId.value = button.dataset.worklogId;
+    editWorklogDuration.value = formatWorklogDuration(Number(button.dataset.minutes));
+    editWorklogDescription.value = button.dataset.description || '';
+    editWorklogDuration.classList.remove('is-invalid');
+    editWorklogModal.show();
+}));
+
+document.getElementById('saveWorklogEdit').addEventListener('click', async () => {
+    const minutes = parseWorklogDuration(editWorklogDuration.value);
+    if (minutes === null) {
+        editWorklogDuration.classList.add('is-invalid');
+        editWorklogDuration.focus();
+        return;
+    }
+    editWorklogDuration.classList.remove('is-invalid');
+    const response = await fetch(`/api/tasks/${editWorklogTaskId.value}/worklog/${editWorklogId.value}`, {
+        method: 'PUT', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({minutes, description: editWorklogDescription.value})
+    });
+    if (!response.ok) {
+        alert('ذخیره تغییرات انجام نشد. لطفاً دوباره تلاش کنید.');
+        return;
+    }
+    location.reload();
+});

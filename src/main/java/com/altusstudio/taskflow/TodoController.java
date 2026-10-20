@@ -66,8 +66,8 @@ public class TodoController {
                 .flatMap(task -> task.getWorkLogs().stream()
                         .filter(log -> !log.getLoggedAt().toLocalDate().isBefore(start)
                                 && !log.getLoggedAt().toLocalDate().isAfter(end))
-                        .map(log -> new WorklogReportEntry(task.getTitle(), log.getDurationMinutes(),
-                                log.getDescription(), log.getLoggedAt())))
+                        .map(log -> new WorklogReportEntry(task.getId(), log.getId(), task.getTitle(),
+                                log.getDurationMinutes(), log.getDescription(), log.getLoggedAt())))
                 .sorted(Comparator.comparing(WorklogReportEntry::loggedAt).reversed())
                 .toList();
     }
@@ -119,6 +119,20 @@ public class TodoController {
     public ResponseEntity<Task> addWorkLog(@PathVariable Long id, @RequestBody WorkLogRequest request) {
         Task task = taskRepository.findById(id).orElseThrow();
         task.getWorkLogs().add(new WorkLog(null, request.getMinutes(), request.getDescription(), LocalDateTime.now()));
+        return ResponseEntity.ok(storageService.save(task));
+    }
+
+    @PutMapping("/api/tasks/{taskId}/worklog/{workLogId}")
+    @ResponseBody
+    public ResponseEntity<Task> updateWorkLog(@PathVariable Long taskId, @PathVariable Long workLogId,
+                                               @RequestBody WorkLogRequest request) {
+        Task task = taskRepository.findById(taskId).orElseThrow();
+        WorkLog workLog = task.getWorkLogs().stream()
+                .filter(log -> workLogId.equals(log.getId()))
+                .findFirst()
+                .orElseThrow();
+        workLog.setDurationMinutes(request.getMinutes());
+        workLog.setDescription(request.getDescription());
         return ResponseEntity.ok(storageService.save(task));
     }
 

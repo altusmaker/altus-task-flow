@@ -57,6 +57,7 @@
                     <th>تاریخ ثبت کارکرد</th>
                     <th>توضیحات</th>
                     <th>مدت زمان کارکرد</th>
+                    <th>عملیات</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -68,12 +69,38 @@
                         <span class="persian-number" th:text="${entry.durationMinutes / 60}"></span> ساعت و
                         <span class="persian-number" th:text="${entry.durationMinutes % 60}"></span> دقیقه
                     </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-primary edit-worklog"
+                                th:attr="data-task-id=${entry.taskId},data-worklog-id=${entry.workLogId},data-minutes=${entry.durationMinutes},data-description=${entry.description}">ویرایش</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </section>
 </main>
+<div class="modal fade" id="editWorklogModal" tabindex="-1" aria-labelledby="editWorklogTitle" aria-hidden="true">
+    <div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title fs-5" id="editWorklogTitle">ویرایش کارکرد</h2>
+            <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="بستن"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="editWorklogTaskId"><input type="hidden" id="editWorklogId">
+            <div class="mb-3"><label class="form-label" for="editWorklogDuration">مدت زمان</label>
+                <input type="text" id="editWorklogDuration" class="form-control" placeholder="1h 15m" autocomplete="off">
+                <div class="invalid-feedback">مدت زمان را با الگوی 4h 45m وارد کنید.</div>
+            </div>
+            <div><label class="form-label" for="editWorklogDescription">توضیحات</label>
+                <textarea id="editWorklogDescription" class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+            <button type="button" class="btn btn-primary" id="saveWorklogEdit">ذخیره تغییرات</button>
+        </div>
+    </div></div>
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/js/jalali-picker.js(v=3)}"></script>
 <script th:src="@{/js/worklog-report.js}"></script>
 </body>

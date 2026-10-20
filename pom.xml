@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.altusstudio</groupId>
     <artifactId>altus-task-flow</artifactId>
-    <version>3.2.1</version>
+    <version>3.3.0</version>
     <name>altus-task-flow</name>
     <description>The simplicity of a daily to-do list meets the power of issue tracking and worklogs.</description>
 
