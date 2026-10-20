@@ -18,14 +18,18 @@ import java.util.stream.Collectors;
 public class TodoController {
     private final TaskRepository taskRepository;
     private final TodoStorageService storageService;
+    private final DesktopNotificationService notifications;
 
-    public TodoController(TaskRepository taskRepository, TodoStorageService storageService) {
+    public TodoController(TaskRepository taskRepository, TodoStorageService storageService,
+                          DesktopNotificationService notifications) {
         this.taskRepository = taskRepository;
         this.storageService = storageService;
+        this.notifications = notifications;
     }
 
     @GetMapping("/")
     public String index(Model model) {
+        model.addAttribute("desktopNotificationsAvailable", notifications.isAvailable());
         List<Task> tasks = taskRepository.findAll();
         model.addAttribute("todos", tasks.stream().filter(task -> task.getStatus() == TaskStatus.TODO).collect(Collectors.toList()));
         model.addAttribute("inProgress", tasks.stream().filter(task -> task.getStatus() == TaskStatus.IN_PROGRESS).collect(Collectors.toList()));

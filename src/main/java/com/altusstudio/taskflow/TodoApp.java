@@ -8,14 +8,18 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 public class TodoApp {
     @Value("${app.browser.auto-open:true}")
     private boolean autoOpenBrowser;
 
     public static void main(String[] args) {
-        SpringApplication.run(TodoApp.class, args);
+        SpringApplication application = new SpringApplication(TodoApp.class);
+        application.setHeadless(false);
+        application.run(args);
     }
 
     @EventListener(ApplicationReadyEvent.class)

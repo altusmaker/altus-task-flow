@@ -73,26 +73,6 @@ function drop(event) {
     fetch(`/api/tasks/${id.replace('task-', '')}/status?status=${column.dataset.status}`, {method: 'PATCH'})
 }
 
-function requestNotificationPermission() {
-    if (Notification.permission !== 'granted') Notification.requestPermission()
-}
-
-const offlineIconBase64 = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmYyNjAwIiBzdHJva2U9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTE4IDZhNiA2IDAgMCAwLTEyIDBjMCA3LTMgOS0zIDloMThzLTMtMi0zLTlNMTMuNzMgMjFhMiAyIDAgMCAxLTMuNDYgMHoiLz48L3N2Zz4=';
-
-function checkReminders() {
-    if (Notification.permission !== 'granted') return;
-    const now = new Date();
-    document.querySelectorAll('.task-card').forEach(task => {
-        const reminder = task.dataset.reminder;
-        if (!reminder) return;
-        const difference = new Date(reminder) - now;
-        if (difference <= 0 && difference > -60000 && !task.dataset.notified) {
-            new Notification('یادآوری تسک', {body: task.querySelector('strong').innerText, icon: offlineIconBase64});
-            task.dataset.notified = 'true'
-        }
-    })
-}
-
 function setupTheme() {
     const storageKey = 'todo-theme', button = document.createElement('button');
     button.type = 'button';
@@ -228,4 +208,3 @@ window.addEventListener('load', () => {
     window.setTimeout(() => loader.classList.add('is-hidden'), 1500);
     window.setTimeout(() => loader.remove(), 1700)
 });
-setInterval(checkReminders, 30000);
