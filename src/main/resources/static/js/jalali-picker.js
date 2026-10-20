@@ -66,6 +66,12 @@
         const days = pop.querySelector('.jalali-days'), title = pop.querySelector('.jalali-picker-title'),
             time = pop.querySelector('.jalali-time-input');
 
+        function syncTheme() {
+            const themedParent = input.closest('[data-theme]'),
+                theme = themedParent?.dataset.theme || document.documentElement.dataset.theme;
+            pop.dataset.theme = theme === 'dark' ? 'dark' : 'light'
+        }
+
         function sync() {
             input.value = selected ? format(selected) + (withTime ? '، ' + time.value : '') : '';
             valueInput.value = selected ? (() => {
@@ -94,6 +100,7 @@
         }
 
         function open() {
+            syncTheme();
             view = selected ? {...selected} : today();
             render();
             pop.hidden = false;
@@ -140,6 +147,11 @@
         document.addEventListener('click', e => {
             if (!pop.hidden && !pop.contains(e.target) && e.target !== input) close()
         });
+        new MutationObserver(syncTheme).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+        syncTheme();
         sync();
         return {
             clear() {

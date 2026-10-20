@@ -2,7 +2,23 @@
     position: absolute;
     z-index: 1080;
     min-width: 18rem;
-    margin-top: .35rem
+    margin-top: .35rem;
+    --jalali-surface: var(--surface, #fff);
+    --jalali-ink: var(--ink, #263947);
+    --jalali-muted: var(--muted, #637581);
+    --jalali-primary: var(--primary, #07658d);
+    --jalali-border: var(--border, #d9e4e8);
+    --jalali-shadow: var(--shadow, 0 12px 28px rgba(38, 57, 71, .16))
+}
+
+.jalali-picker-popover[data-theme="dark"] {
+    color-scheme: dark;
+    --jalali-surface: var(--surface, #1d303a);
+    --jalali-ink: var(--ink, #e7f1f4);
+    --jalali-muted: var(--muted, #a5bbc4);
+    --jalali-primary: var(--primary, #39a9cf);
+    --jalali-border: var(--border, #36505d);
+    --jalali-shadow: var(--shadow, 0 12px 28px rgba(0, 0, 0, .3))
 }
 
 .jalali-picker-popover[hidden] {
@@ -10,12 +26,12 @@
 }
 
 .jalali-picker {
-    border: 1px solid var(--border, #d9e4e8);
+    border: 1px solid var(--jalali-border);
     border-radius: .7rem;
     padding: .75rem;
-    background: var(--surface, #fff);
-    color: var(--ink, #263947);
-    box-shadow: var(--shadow, 0 12px 28px rgba(38, 57, 71, .16))
+    background: var(--jalali-surface);
+    color: var(--jalali-ink);
+    box-shadow: var(--jalali-shadow)
 }
 
 .jalali-picker-head {
@@ -27,8 +43,8 @@
 
 .jalali-picker-head button {
     border: 0;
-    background: color-mix(in srgb, var(--primary, #07658d) 12%, transparent);
-    color: var(--primary, #07658d);
+    background: color-mix(in srgb, var(--jalali-primary) 12%, transparent);
+    color: var(--jalali-primary);
     border-radius: .45rem;
     width: 2rem;
     height: 2rem
@@ -46,7 +62,7 @@
 }
 
 .jalali-week {
-    color: var(--muted, #637581);
+    color: var(--jalali-muted);
     font-size: .72rem;
     margin-bottom: .25rem
 }
@@ -59,7 +75,7 @@
 }
 
 .jalali-days button:hover, .jalali-days button.selected {
-    background: var(--primary, #07658d);
+    background: var(--jalali-primary);
     color: #fff
 }
 
@@ -88,5 +104,12 @@
 
 .jalali-date-input {
     cursor: pointer;
-    background-color: #fff !important
+    background-color: var(--surface, #fff) !important;
+    color: var(--ink, #263947)
+}
+
+[data-theme="dark"] .jalali-date-input {
+    color-scheme: dark;
+    background-color: var(--surface, #1d303a) !important;
+    color: var(--ink, #e7f1f4)
 }
