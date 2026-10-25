@@ -172,6 +172,10 @@ body {
     padding-left: .55rem
 }
 
+.column[data-status="DONE"] .task-title {
+    text-decoration: line-through;
+}
+
 .task-label {
     display: inline-flex;
     margin-top: .45rem;
