@@ -45,6 +45,9 @@
                     <h2 class="column-title fw-bold" th:data-status="${colStatus.name()}"
                         th:text="${colStatus.label}"></h2><span class="task-count"
                                                                 th:text="${(colStatus == T(com.altusstudio.taskflow.TaskStatus).TODO ? todos : (colStatus == T(com.altusstudio.taskflow.TaskStatus).IN_PROGRESS ? inProgress : dones)).size()}"></span>
+                    <button type="button" class="btn add-task btn-sm" th:data-status="${colStatus.name()}"
+                            onclick="openAddModal(this.dataset.status)">+ افزودن تسک
+                    </button>
                 </div>
                 <div class="task-list">
                     <div th:each="task : ${colStatus == T(com.altusstudio.taskflow.TaskStatus).TODO ? todos : (colStatus == T(com.altusstudio.taskflow.TaskStatus).IN_PROGRESS ? inProgress : dones)}"
@@ -70,11 +73,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="column-footer mt-2 text-center">
-                    <button class="btn add-task w-100 btn-sm" th:data-status="${colStatus.name()}"
-                            onclick="openAddModal(this.dataset.status)">+ افزودن تسک
-                    </button>
                 </div>
             </section>
         </div>
