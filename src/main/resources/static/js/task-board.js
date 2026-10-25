@@ -47,6 +47,22 @@ function updateTaskCounts() {
     document.querySelectorAll('.column').forEach(column => column.querySelector('.task-count').textContent = new Intl.NumberFormat('fa-IR', {useGrouping: false}).format(column.querySelectorAll('.task-list .task-card').length))
 }
 
+function updateOverdueReminders() {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Tehran', year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
+    }).formatToParts(new Date());
+    const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+    const now = `${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}:${values.second}`;
+    document.querySelectorAll('.task-card').forEach(card => {
+        const badge = card.querySelector('.reminder-badge');
+        if (!badge) return;
+        const reminder = card.dataset.tehranReminder || card.dataset.reminder;
+        badge.classList.toggle('is-overdue', Boolean(reminder && reminder <= now
+            && card.closest('.column')?.dataset.status !== 'DONE'))
+    })
+}
+
 function drag(event) {
     event.dataTransfer.setData('text', event.target.id)
 }
@@ -70,6 +86,7 @@ function drop(event) {
     column.classList.remove('drag-over');
     column.querySelector('.task-list').prepend(task);
     updateTaskCounts();
+    updateOverdueReminders();
     fetch(`/api/tasks/${id.replace('task-', '')}/status?status=${column.dataset.status}`, {method: 'PATCH'})
         .then(response => {
             if (response.ok) location.reload()
@@ -202,7 +219,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTaskCounts();
     setupTheme();
     setupBrand();
-    setupTaskEditor()
+    setupTaskEditor();
+    updateOverdueReminders();
+    window.setInterval(updateOverdueReminders, 1000)
 });
 
 window.addEventListener('load', () => {

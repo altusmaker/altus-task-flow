@@ -212,6 +212,13 @@ body {
     color: #b85a22
 }
 
+.column:not([data-status="DONE"]) .reminder-badge.is-overdue {
+    background: #b91c1c;
+    color: #fff;
+    font-weight: 800;
+    box-shadow: 0 0 0 2px #fecaca
+}
+
 .btn-xs {
     padding: .22rem .48rem;
     font-size: .73rem;
@@ -354,6 +361,35 @@ body {
 [data-theme="dark"] .reminder-badge {
     background: #482c1e;
     color: #ffc397
+}
+
+[data-theme="dark"] .column:not([data-status="DONE"]) .reminder-badge.is-overdue {
+    background: #fda4af;
+    color: #4c0519;
+    box-shadow: 0 0 0 2px #9f1239
+}
+
+.column:not([data-status="DONE"]) .task-card:has(.reminder-badge.is-overdue) {
+    --overdue-text: #991b1b;
+    --overdue-tint: #fee2e2;
+    background: #fff1f2;
+    border-color: #e11d48;
+    border-inline-start: 5px solid #e11d48
+}
+
+[data-theme="dark"] .column:not([data-status="DONE"]) .task-card:has(.reminder-badge.is-overdue) {
+    --overdue-text: #fecdd3;
+    --overdue-tint: #641f2b;
+    background: #3b202c;
+    border-color: #fb7185
+}
+
+.column:not([data-status="DONE"]) .task-card:has(.reminder-badge.is-overdue) :is(.task-title, .task-meta, .task-label, .worklog-badge) {
+    color: var(--overdue-text)
+}
+
+.column:not([data-status="DONE"]) .task-card:has(.reminder-badge.is-overdue) :is(.task-label, .worklog-badge) {
+    background: var(--overdue-tint)
 }
 
 .app-loader {
