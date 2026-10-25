@@ -223,10 +223,3 @@ document.addEventListener('DOMContentLoaded', () => {
     updateOverdueReminders();
     window.setInterval(updateOverdueReminders, 1000)
 });
-
-window.addEventListener('load', () => {
-    const loader = document.querySelector('.app-loader');
-    if (!loader) return;
-    window.setTimeout(() => loader.classList.add('is-hidden'), 1500);
-    window.setTimeout(() => loader.remove(), 1700)
-});

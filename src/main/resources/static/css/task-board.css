@@ -212,6 +212,10 @@ body {
     color: #b85a22
 }
 
+.column[data-status="DONE"] .reminder-badge {
+    display: none
+}
+
 .column:not([data-status="DONE"]) .reminder-badge.is-overdue {
     background: #b91c1c;
     color: #fff;
@@ -401,6 +405,10 @@ body {
     background: var(--canvas);
     opacity: 1;
     transition: opacity .45s ease, visibility .45s ease
+}
+
+html[data-suppress-page-loader] .app-loader {
+    display: none;
 }
 
 .app-loader.is-hidden {
