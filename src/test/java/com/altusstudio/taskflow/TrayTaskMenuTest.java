@@ -79,7 +79,7 @@ class TrayTaskMenuTest {
             JPanel content = TrayTaskMenu.createContent(tasks, NOW, id -> {}, () -> {});
             JPanel header = (JPanel) ((BorderLayout) content.getLayout()).getLayoutComponent(BorderLayout.NORTH);
             JPanel titles = (JPanel) ((BorderLayout) header.getLayout()).getLayoutComponent(BorderLayout.CENTER);
-            assertEquals("مدیریت کارهای آلتوس", ((JLabel) titles.getComponent(0)).getText());
+            assertEquals("آلتوس تسک فلو", ((JLabel) titles.getComponent(0)).getText());
             assertEquals("در حال انجام", ((JLabel) titles.getComponent(1)).getText());
             assertFalse(content.getComponentOrientation().isLeftToRight());
             JPanel badgeHolder = (JPanel) ((BorderLayout) header.getLayout()).getLayoutComponent(BorderLayout.LINE_END);
