@@ -45,7 +45,7 @@ public class DesktopNotificationService {
             }
             try (var icon = getClass().getResourceAsStream("/static/images/todo-logo.png")) {
                 if (icon == null) throw new IllegalStateException("Missing notification icon");
-                TrayIcon candidate = new TrayIcon(ImageIO.read(icon), "Altus Task Flow");
+                TrayIcon candidate = new TrayIcon(ImageIO.read(icon), "آلتوس تسک فلو");
                 candidate.setImageAutoSize(true);
                 candidate.addMouseListener(new MouseAdapter() {
                     @Override

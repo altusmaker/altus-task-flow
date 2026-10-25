@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,9 @@ class TrayTaskMenuTest {
                 JButton row = (JButton) rows.getComponent(index);
                 assertEquals(index < 2, TrayTaskMenu.OVERDUE_BACKGROUND.equals(row.getBackground()));
                 assertEquals(true, row.getClientProperty("html.disable"));
+                assertFalse(row.getComponentOrientation().isLeftToRight());
+                assertEquals(index < 2 ? "تسک عقب‌افتاده" : "تسک در حال انجام",
+                        row.getAccessibleContext().getAccessibleDescription());
                 row.doClick(0);
             }
             assertEquals(List.of(1L, 2L, 3L, 6L, 5L, 4L), opened);
@@ -52,13 +58,53 @@ class TrayTaskMenuTest {
             JPanel content = TrayTaskMenu.createContent(List.of(), NOW,
                     id -> fail("No task should be opened"), () -> exited.set(true));
             assertInstanceOf(JLabel.class, rows(content).getComponent(0));
+            assertEquals("هیچ تسکی در حال انجام نیست", ((JLabel) rows(content).getComponent(0)).getText());
             JPanel footer = (JPanel) ((BorderLayout) content.getLayout())
                     .getLayoutComponent(BorderLayout.SOUTH);
             assertInstanceOf(JSeparator.class, footer.getComponent(0));
             JButton exit = (JButton) footer.getComponent(1);
-            assertEquals("Exit", exit.getText());
+            assertEquals("خروج", exit.getText());
             exit.doClick(0);
             assertTrue(exited.get());
+        });
+    }
+
+    @Test
+    void styledMenuHasHeaderBoundedScrollingAndVisibleHoverState() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            List<Task> tasks = new ArrayList<>();
+            for (int id = 1; id <= 30; id++) {
+                tasks.add(task(id, "A long task title ".repeat(20), TaskStatus.IN_PROGRESS, null));
+            }
+            JPanel content = TrayTaskMenu.createContent(tasks, NOW, id -> {}, () -> {});
+            JPanel header = (JPanel) ((BorderLayout) content.getLayout()).getLayoutComponent(BorderLayout.NORTH);
+            JPanel titles = (JPanel) ((BorderLayout) header.getLayout()).getLayoutComponent(BorderLayout.CENTER);
+            assertEquals("مدیریت کارهای آلتوس", ((JLabel) titles.getComponent(0)).getText());
+            assertEquals("در حال انجام", ((JLabel) titles.getComponent(1)).getText());
+            assertFalse(content.getComponentOrientation().isLeftToRight());
+            JPanel badgeHolder = (JPanel) ((BorderLayout) header.getLayout()).getLayoutComponent(BorderLayout.LINE_END);
+            JLabel badge = (JLabel) badgeHolder.getComponent(0);
+            assertEquals("۳۰", badge.getText());
+            assertEquals("۳۰ تسک در حال انجام", badge.getAccessibleContext().getAccessibleName());
+            JScrollPane scroll = (JScrollPane) ((BorderLayout) content.getLayout()).getLayoutComponent(BorderLayout.CENTER);
+            assertEquals(420, scroll.getPreferredSize().width);
+            assertEquals(400, scroll.getPreferredSize().height);
+            assertEquals(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER, scroll.getHorizontalScrollBarPolicy());
+
+            JButton row = (JButton) rows(content).getComponent(0);
+            assertNotNull(row.getIcon());
+            assertFalse(row.isContentAreaFilled());
+            assertEquals(row.getText(), row.getToolTipText());
+            row.setSize(320, 44);
+            BufferedImage image = new BufferedImage(320, 44, BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics = image.createGraphics();
+            row.paint(graphics);
+            int normal = image.getRGB(300, 5);
+            row.getModel().setRollover(true);
+            row.paint(graphics);
+            assertNotEquals(normal, image.getRGB(300, 5));
+            assertEquals(Color.WHITE.getRGB(), normal);
+            graphics.dispose();
         });
     }
 

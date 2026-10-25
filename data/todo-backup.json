@@ -77,9 +77,9 @@
   "id" : 42,
   "title" : "تست برچسب",
   "label" : "بررسی مشکل",
-  "status" : "TODO",
+  "status" : "IN_PROGRESS",
   "reminderTime" : null,
-  "updatedAt" : [ 2026, 10, 26, 0, 14, 25, 127959000 ],
+  "updatedAt" : [ 2026, 10, 26, 1, 36, 40, 943893000 ],
   "workLogs" : [ ],
   "totalWorkMinutes" : 0,
   "formattedTotalWork" : "0m"
