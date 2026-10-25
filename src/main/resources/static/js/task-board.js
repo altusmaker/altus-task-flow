@@ -44,7 +44,47 @@ function saveWorklog() {
 }
 
 function updateTaskCounts() {
-    document.querySelectorAll('.column').forEach(column => column.querySelector('.task-count').textContent = new Intl.NumberFormat('fa-IR', {useGrouping: false}).format(column.querySelectorAll('.task-list .task-card').length))
+    document.querySelectorAll('.column').forEach(column => column.querySelector('.task-count').textContent = new Intl.NumberFormat('fa-IR', {useGrouping: false}).format(column.querySelectorAll('.task-list .task-card:not([hidden])').length))
+}
+
+function setupLabelFilters() {
+    const container = document.getElementById('quickFilterLabels'),
+        clearButton = document.getElementById('clearLabelFilters'),
+        cards = Array.from(document.querySelectorAll('.task-list .task-card')),
+        selectedLabels = new Set(),
+        labels = [...new Set(cards.map(card => (card.dataset.label || '').trim()).filter(Boolean))]
+            .sort((first, second) => first.localeCompare(second, 'fa'));
+
+    function applyFilters() {
+        cards.forEach(card => {
+            card.hidden = selectedLabels.size > 0 && !selectedLabels.has((card.dataset.label || '').trim())
+        });
+        container.querySelectorAll('button').forEach(button => {
+            button.setAttribute('aria-pressed', String(selectedLabels.has(button.dataset.label)))
+        });
+        clearButton.disabled = selectedLabels.size === 0;
+        updateTaskCounts()
+    }
+
+    labels.forEach(label => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'btn quick-filter-label';
+        button.textContent = label;
+        button.dataset.label = label;
+        button.setAttribute('aria-pressed', 'false');
+        button.addEventListener('click', () => {
+            if (selectedLabels.has(label)) selectedLabels.delete(label);
+            else selectedLabels.add(label);
+            applyFilters()
+        });
+        container.appendChild(button)
+    });
+    clearButton.addEventListener('click', () => {
+        selectedLabels.clear();
+        applyFilters()
+    });
+    applyFilters()
 }
 
 function updateOverdueReminders() {
@@ -220,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupTheme();
     setupBrand();
     setupTaskEditor();
+    setupLabelFilters();
     updateOverdueReminders();
     window.setInterval(updateOverdueReminders, 1000)
 });

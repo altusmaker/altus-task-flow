@@ -32,6 +32,11 @@
                   th:text="${desktopNotificationsAvailable} ? '🔔 یادآوری سیستم‌عامل فعال است' : '🔕 اعلان سیستم‌عامل در دسترس نیست'"></span>
         </div>
     </header>
+    <div class="quick-filter" role="group" aria-labelledby="quickFilterTitle">
+        <span id="quickFilterTitle" class="quick-filter-title">فیلتر برچسب‌ها</span>
+        <div id="quickFilterLabels" class="quick-filter-labels"></div>
+        <button id="clearLabelFilters" type="button" class="btn quick-filter-clear" disabled>پاک کردن</button>
+    </div>
     <div class="row g-3">
         <div class="col-md-4" th:each="colStatus : ${T(com.altusstudio.taskflow.TaskStatus).values()}">
             <section class="column" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"

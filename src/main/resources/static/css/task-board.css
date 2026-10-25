@@ -84,6 +84,60 @@ body {
     color: var(--primary-dark)
 }
 
+.quick-filter {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1rem;
+    padding: .65rem .85rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: .8rem
+}
+
+.quick-filter-title, .quick-filter-clear {
+    flex: 0 0 auto;
+    color: var(--muted);
+    font-size: .8rem;
+    white-space: nowrap
+}
+
+.quick-filter-labels {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    padding: .2rem
+}
+
+.quick-filter-label {
+    flex: 0 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: .8rem;
+    white-space: nowrap
+}
+
+.quick-filter-label:hover, .quick-filter-clear:not(:disabled):hover {
+    color: var(--primary);
+    border-color: var(--primary)
+}
+
+.quick-filter-label[aria-pressed="true"] {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--surface)
+}
+
+.quick-filter-label:focus-visible, .quick-filter-clear:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px
+}
+
 .column {
     --accent: var(--primary);
     background: rgba(255, 255, 255, .72);
