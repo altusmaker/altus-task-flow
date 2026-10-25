@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 
 /**
  * Keeps a human-readable copy of the persisted H2 data in the project data directory.
@@ -26,6 +27,7 @@ public class TodoStorageService {
     }
 
     public Task save(Task task) {
+        task.setUpdatedAt(LocalDateTime.now());
         Task savedTask = taskRepository.saveAndFlush(task);
         writeBackup();
         return savedTask;

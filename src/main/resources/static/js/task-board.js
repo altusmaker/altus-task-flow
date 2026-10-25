@@ -68,9 +68,12 @@ function drop(event) {
     event.preventDefault();
     const column = event.currentTarget, id = event.dataTransfer.getData('text'), task = document.getElementById(id);
     column.classList.remove('drag-over');
-    column.querySelector('.task-list').appendChild(task);
+    column.querySelector('.task-list').prepend(task);
     updateTaskCounts();
     fetch(`/api/tasks/${id.replace('task-', '')}/status?status=${column.dataset.status}`, {method: 'PATCH'})
+        .then(response => {
+            if (response.ok) location.reload()
+        })
 }
 
 function setupTheme() {

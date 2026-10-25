@@ -16,6 +16,7 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
     private LocalDateTime reminderTime;
+    private LocalDateTime updatedAt;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<WorkLog> workLogs = new ArrayList<>();
 
@@ -79,6 +80,14 @@ public class Task {
 
     public void setReminderTime(LocalDateTime reminderTime) {
         this.reminderTime = reminderTime;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public List<WorkLog> getWorkLogs() {
