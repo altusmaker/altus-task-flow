@@ -118,6 +118,9 @@ public class TodoController {
     @ResponseBody
     public ResponseEntity<Void> updateStatus(@PathVariable Long id, @RequestParam TaskStatus status) {
         Task task = taskRepository.findById(id).orElseThrow();
+        if (status == TaskStatus.TODO && !task.getWorkLogs().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
         task.setStatus(status);
         storageService.save(task);
         return ResponseEntity.ok().build();
@@ -128,6 +131,7 @@ public class TodoController {
     public ResponseEntity<Task> addWorkLog(@PathVariable Long id, @RequestBody WorkLogRequest request) {
         Task task = taskRepository.findById(id).orElseThrow();
         task.getWorkLogs().add(new WorkLog(null, request.getMinutes(), request.getDescription(), LocalDateTime.now()));
+        task.setStatus(TaskStatus.IN_PROGRESS);
         return ResponseEntity.ok(storageService.save(task));
     }
 

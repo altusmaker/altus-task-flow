@@ -124,12 +124,18 @@ function drop(event) {
     event.preventDefault();
     const column = event.currentTarget, id = event.dataTransfer.getData('text'), task = document.getElementById(id);
     column.classList.remove('drag-over');
-    column.querySelector('.task-list').prepend(task);
-    updateTaskCounts();
-    updateOverdueReminders();
+    if (!task) return;
+    if (column.dataset.status === 'TODO' && task.dataset.hasWorklogs === 'true') {
+        alert('تسک دارای کارکرد را نمی‌توان به ستون آماده انجام منتقل کرد.');
+        return
+    }
     fetch(`/api/tasks/${id.replace('task-', '')}/status?status=${column.dataset.status}`, {method: 'PATCH'})
         .then(response => {
-            if (response.ok) location.reload()
+            if (!response.ok) throw new Error(response.status);
+            location.reload()
+        })
+        .catch(() => {
+            alert('امکان تغییر وضعیت تسک وجود ندارد.');
         })
 }
 

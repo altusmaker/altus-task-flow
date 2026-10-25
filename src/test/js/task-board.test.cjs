@@ -6,6 +6,57 @@ const vm = require('node:vm');
 
 const source = readFileSync(join(__dirname, '../../main/resources/static/js/task-board.js'), 'utf8');
 
+function dropBoard(status, hasWorklogs, response = {ok: true}) {
+    const requests = [], alerts = [];
+    let reloads = 0;
+    const task = {dataset: {hasWorklogs: String(hasWorklogs)}};
+    const context = vm.createContext({
+        bootstrap: {Modal: function () {}},
+        document: {getElementById: () => task, addEventListener() {}},
+        alert: message => alerts.push(message),
+        location: {reload: () => reloads++},
+        fetch: (...args) => {
+            requests.push(args);
+            return response instanceof Error ? Promise.reject(response) : Promise.resolve(response);
+        }
+    });
+    vm.runInContext(source, context);
+    context.drop({
+        preventDefault() {},
+        currentTarget: {dataset: {status}, classList: {remove() {}}},
+        dataTransfer: {getData: () => 'task-7'}
+    });
+    return {requests, alerts, reloads: () => reloads};
+}
+
+test('dropping a task with worklogs into TODO is blocked without a request', () => {
+    const state = dropBoard('TODO', true);
+    assert.equal(state.requests.length, 0);
+    assert.equal(state.alerts.length, 1);
+    assert.equal(state.reloads(), 0);
+});
+
+test('allowed drops persist status and refresh only after success', async () => {
+    for (const [status, hasWorklogs] of [['TODO', false], ['IN_PROGRESS', true], ['DONE', true]]) {
+        const state = dropBoard(status, hasWorklogs);
+        assert.equal(state.requests[0][0], `/api/tasks/7/status?status=${status}`);
+        assert.equal(state.requests[0][1].method, 'PATCH');
+        assert.equal(state.reloads(), 0);
+        await new Promise(resolve => setImmediate(resolve));
+        assert.equal(state.reloads(), 1);
+        assert.equal(state.alerts.length, 0);
+    }
+});
+
+test('rejected or failed drops keep the board unchanged and show an error', async () => {
+    for (const response of [{ok: false, status: 400}, new Error('Network unavailable')]) {
+        const state = dropBoard('TODO', false, response);
+        await new Promise(resolve => setImmediate(resolve));
+        assert.equal(state.reloads(), 0);
+        assert.equal(state.alerts.length, 1);
+    }
+});
+
 function element() {
     return {
         dataset: {}, attributes: {}, children: [], listeners: {}, textContent: '',
