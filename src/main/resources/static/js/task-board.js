@@ -261,11 +261,19 @@ function setupTaskEditor() {
     })
 }
 
+function openLinkedTask() {
+    const id = new URLSearchParams(window.location.search).get('task');
+    if (!id || !/^\d+$/.test(id)) return;
+    const card = document.getElementById(`task-${id}`);
+    if (card) window.openEditTaskModal(card)
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     updateTaskCounts();
     setupTheme();
     setupBrand();
     setupTaskEditor();
+    openLinkedTask();
     setupLabelFilters();
     updateOverdueReminders();
     window.setInterval(updateOverdueReminders, 1000)

@@ -32,10 +32,7 @@ public class TodoController {
         model.addAttribute("desktopNotificationsAvailable", notifications.isAvailable());
         List<Task> tasks = taskRepository.findAll();
         // Reminders come first, earliest first; break ties by most recent activity.
-        tasks.sort(Comparator.comparing(Task::getReminderTime,
-                        Comparator.nullsLast(Comparator.naturalOrder()))
-                .thenComparing(Task::getUpdatedAt, Comparator.nullsLast(Comparator.reverseOrder()))
-                .thenComparing(Task::getId, Comparator.reverseOrder()));
+        tasks.sort(TaskOrder.BOARD);
         model.addAttribute("todos", tasks.stream().filter(task -> task.getStatus() == TaskStatus.TODO).collect(Collectors.toList()));
         model.addAttribute("inProgress", tasks.stream().filter(task -> task.getStatus() == TaskStatus.IN_PROGRESS).collect(Collectors.toList()));
         model.addAttribute("dones", tasks.stream().filter(task -> task.getStatus() == TaskStatus.DONE).collect(Collectors.toList()));

@@ -16,8 +16,8 @@
     "description" : "کار زیاد",
     "loggedAt" : [ 2026, 10, 18, 1, 26, 40, 995265000 ]
   } ],
-  "formattedTotalWork" : "3h 0m",
-  "totalWorkMinutes" : 180
+  "totalWorkMinutes" : 180,
+  "formattedTotalWork" : "3h 0m"
 }, {
   "id" : 7,
   "title" : "نسخه امنیت",
@@ -26,8 +26,8 @@
   "reminderTime" : [ 2026, 10, 24, 14, 1 ],
   "updatedAt" : [ 2026, 10, 26, 0, 28, 0, 680075000 ],
   "workLogs" : [ ],
-  "formattedTotalWork" : "0m",
-  "totalWorkMinutes" : 0
+  "totalWorkMinutes" : 0,
+  "formattedTotalWork" : "0m"
 }, {
   "id" : 8,
   "title" : "نسخه اگاهی",
@@ -36,8 +36,8 @@
   "reminderTime" : [ 2026, 10, 18, 2, 8 ],
   "updatedAt" : [ 2026, 10, 25, 22, 37, 43, 320398000 ],
   "workLogs" : [ ],
-  "formattedTotalWork" : "0m",
-  "totalWorkMinutes" : 0
+  "totalWorkMinutes" : 0,
+  "formattedTotalWork" : "0m"
 }, {
   "id" : 9,
   "title" : "تست جدید",
@@ -56,23 +56,23 @@
     "description" : "jsjd",
     "loggedAt" : [ 2026, 10, 25, 23, 28, 58, 751141000 ]
   } ],
-  "formattedTotalWork" : "1h 30m",
-  "totalWorkMinutes" : 90
+  "totalWorkMinutes" : 90,
+  "formattedTotalWork" : "1h 30m"
 }, {
   "id" : 10,
   "title" : "جدید ترین",
   "label" : "مستند سازی",
   "status" : "IN_PROGRESS",
-  "reminderTime" : [ 2026, 10, 26, 9, 0 ],
-  "updatedAt" : [ 2026, 10, 26, 0, 28, 15, 904431000 ],
+  "reminderTime" : [ 2026, 10, 26, 0, 32 ],
+  "updatedAt" : [ 2026, 10, 26, 0, 31, 21, 534506000 ],
   "workLogs" : [ {
     "id" : 38,
     "durationMinutes" : 15,
     "description" : "",
     "loggedAt" : [ 2026, 10, 26, 0, 28, 15, 904431000 ]
   } ],
-  "formattedTotalWork" : "15m",
-  "totalWorkMinutes" : 15
+  "totalWorkMinutes" : 15,
+  "formattedTotalWork" : "15m"
 }, {
   "id" : 42,
   "title" : "تست برچسب",
@@ -81,6 +81,6 @@
   "reminderTime" : null,
   "updatedAt" : [ 2026, 10, 26, 0, 14, 25, 127959000 ],
   "workLogs" : [ ],
-  "formattedTotalWork" : "0m",
-  "totalWorkMinutes" : 0
+  "totalWorkMinutes" : 0,
+  "formattedTotalWork" : "0m"
 } ]

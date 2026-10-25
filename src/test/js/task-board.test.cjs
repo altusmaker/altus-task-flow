@@ -6,6 +6,22 @@ const vm = require('node:vm');
 
 const source = readFileSync(join(__dirname, '../../main/resources/static/js/task-board.js'), 'utf8');
 
+test('tray task links open the matching modal and ignore missing or invalid tasks', () => {
+    for (const [search, expected] of [['?task=7', 1], ['?task=8', 0], ['?task=bad', 0], ['', 0]]) {
+        const card = {id: 'task-7'}, opened = [];
+        const context = vm.createContext({
+            URLSearchParams,
+            bootstrap: {Modal: function () {}},
+            window: {location: {search}, openEditTaskModal: value => opened.push(value)},
+            document: {getElementById: id => id === 'task-7' ? card : null, addEventListener() {}}
+        });
+        vm.runInContext(source, context);
+        context.openLinkedTask();
+        assert.equal(opened.length, expected);
+        if (expected) assert.equal(opened[0], card);
+    }
+});
+
 function dropBoard(status, hasWorklogs, response = {ok: true}) {
     const requests = [], alerts = [];
     let reloads = 0;
